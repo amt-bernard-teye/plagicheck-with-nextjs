@@ -31,7 +31,7 @@ export default function Home() {
         description="Please enter your login details below to access your account">
         <form>
           <FormGroup className="mb-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Email/Staff ID</Label>
             <FormControl placeholder="Your email or staff ID" type="email"
               leftIcon={<SMSTracking />}/>
           </FormGroup>
