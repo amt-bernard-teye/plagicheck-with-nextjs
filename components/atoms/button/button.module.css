@@ -1,0 +1,21 @@
+.btn {
+  font: inherit;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 10px 25px;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background-color: var(--sea-blue-100);
+  color: var(--white);
+  border-radius: 8px;
+}
+
+
+@media (min-width: 768px) {
+  .btn {
+    padding: 15px 25px;
+  }
+}
