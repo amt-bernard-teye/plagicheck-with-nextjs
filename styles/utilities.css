@@ -1,3 +1,14 @@
-.mb-2 {
-  margin-bottom: 16px;
+.mb-2 { margin-bottom: 16px; }
+
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.justify-content-between { justify-content: space-between; }
+
+.link {
+  text-decoration: none;
+  color: var(--sea-blue-100);
+}
+
+.link:hover {
+  text-decoration: underline;
 }
