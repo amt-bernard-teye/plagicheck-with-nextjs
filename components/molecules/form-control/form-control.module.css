@@ -1,0 +1,18 @@
+.formControl {
+  display: flex;
+  gap: 8px;
+  border: 1px solid var(--gray-700);
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.formControl:has(input:focus) {
+  border-color: var(--gray-300);
+}
+
+.formControl input {
+  outline: none;
+  font: inherit;
+  flex-grow: 1;
+  border: none;
+}
