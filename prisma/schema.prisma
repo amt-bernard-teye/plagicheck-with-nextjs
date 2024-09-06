@@ -13,6 +13,11 @@ enum Role {
   STUDENT
 }
 
+enum AvailabilityStatus {
+  AVAILABLE
+  UN_AVAILABLE
+}
+
 model User {
   id String @id
   name String
@@ -21,6 +26,7 @@ model User {
   phoneNumber String
   role Role
   image String?
+  status AvailabilityStatus @default(AVAILABLE)
   lecturers Lecturer[]
   students Student[]
 
@@ -30,6 +36,7 @@ model User {
 model Faculty {
   id Int @id @default(autoincrement())
   name String
+  status AvailabilityStatus @default(AVAILABLE)
   departments Department[]
 
   @@map("faculties")
@@ -38,6 +45,7 @@ model Faculty {
 model Department {
   id Int @id @default(autoincrement())
   name String
+  status AvailabilityStatus @default(AVAILABLE)
   facultyId Int
   faculty Faculty @relation(fields: [facultyId], references: [id])
   lecturers Lecturer[]
