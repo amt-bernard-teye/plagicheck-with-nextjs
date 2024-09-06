@@ -7,14 +7,14 @@ import FormGroup from "@/components/atoms/form-group/form-group";
 import Label from "@/components/atoms/label/label";
 import FormControl from "@/components/molecules/form-control/form-control";
 import Button from "@/components/atoms/button/button";
+import ArrowLeft from "@/components/atoms/icons/arrow-left";
 import PasswordToggler from "@/components/molecules/password-toggler/password-toggler";
-import SMSTracking from "@/components/atoms/icons/sms-tracking";
 import Lock from "@/components/atoms/icons/lock";
+import { useAlert } from "@/lib/hooks/useAlert";
 import Alert from "@/components/molecules/alert/alert";
 import { AlertVariant } from "@/lib/enums/alert-variant";
-import { useAlert } from "@/lib/hooks/useAlert";
 
-export default function Home() {
+export default function ResetPassword() {
   const { alertDetails, handleAlertDetails } = useAlert();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,31 +31,28 @@ export default function Home() {
         <link rel="icon" href="/icon.svg" />
       </Head>
       <Auth 
-        title="Login"
-        description="Please enter your login details below to access your account">
+        title="Reset Password"
+        description="Please enter your new password to complete the reset process.">
         <form>
           <FormGroup className="mb-2">
-            <Label htmlFor="username">Email/Staff ID</Label>
-            <FormControl placeholder="Your email or staff ID" type="email"
-              leftIcon={<SMSTracking />}/>
-          </FormGroup>
-          <FormGroup className="mb-2">
-            <Label htmlFor="password">Password</Label>
-            <FormControl 
-              placeholder="Type your password here" 
-              type={showPassword ? "text" : "password"}
+            <Label htmlFor="password">New Password</Label>
+            <FormControl placeholder="Type your new password" type="password" id="password"
               leftIcon={<Lock />}>
               <PasswordToggler onToggle={togglePasswordVisibility} state={showPassword}/>
             </FormControl>
           </FormGroup>
-          <div className="flex justify-content-between mb-2">
-            <Label>
-              <input type="checkbox" /> Remember me
-            </Label>
-            <Link href="/forgot-password" className="link">Forgot password?</Link>
-          </div>
-          <div className="flex flex-column">
-            <Button variant="primary">Login</Button>
+          <FormGroup className="mb-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <FormControl placeholder="Confirm your password" type="password" id="confirmPassword"
+              leftIcon={<Lock />}>
+              <PasswordToggler onToggle={togglePasswordVisibility} state={showPassword}/>
+            </FormControl>
+          </FormGroup>
+          <div className="flex flex-column gap-2">
+            <Button variant="primary" type="submit">Save new password</Button>
+            <Button variant="secondary">
+              <ArrowLeft /> Back to login
+            </Button>
           </div>
         </form>
       </Auth>
