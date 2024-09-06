@@ -20,6 +20,11 @@
   background-color: var(--sea-blue-500);
 }
 
+.btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
 .btnSecondary {
   border: 1px solid var(--gray-700);
   padding-top: 9px;
