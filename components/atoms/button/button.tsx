@@ -1,4 +1,5 @@
 import { ComponentPropsWithoutRef, PropsWithChildren } from "react";
+import Link from "next/link";
 
 import styles from "./button.module.css";
 
@@ -7,7 +8,7 @@ type ButtonProps = PropsWithChildren<{
   variant: "primary" | "secondary"
 }> & ComponentPropsWithoutRef<"button">;
 
-export default function Button({isLink, variant, children, ...props}: ButtonProps) {
+export default function Button({variant, children, ...props}: ButtonProps) {
   let btnVariant = "";
 
   if (variant === "primary") {
@@ -17,6 +18,8 @@ export default function Button({isLink, variant, children, ...props}: ButtonProp
   }
 
   return (
-    <button className={`${styles.btn} ${btnVariant}`} {...props}>{ children }</button>
+    <button 
+      className={`${styles.btn} ${btnVariant}`} 
+      {...props}>{ children }</button>
   );
 }

@@ -5,17 +5,41 @@
   background-color: transparent;
   padding: 10px 25px;
   cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btnPrimary {
   background-color: var(--sea-blue-100);
   color: var(--white);
-  border-radius: 8px;
+}
+
+.btnPrimary:hover {
+  background-color: var(--sea-blue-500);
+}
+
+.btnSecondary {
+  border: 1px solid var(--gray-700);
+  padding-top: 9px;
+  padding-bottom: 9px;
+  line-height: 0.5;
+  gap: 8px;
+}
+
+.btnSecondary:hover {
+  background-color: var(--gray-1000);
 }
 
 
 @media (min-width: 768px) {
   .btn {
     padding: 15px 25px;
+  }
+
+  .btnSecondary {
+    padding-top: 11px;
+    padding-bottom: 10px;
   }
 }
