@@ -7,7 +7,7 @@ import FormGroup from "@/components/atoms/form-group/form-group";
 import Label from "@/components/atoms/label/label";
 import FormControl from "@/components/molecules/form-control/form-control";
 import Button from "@/components/atoms/button/button";
-import PasswordToggler from "@/components/molecules/password-toggler/password-toggler";
+import PasswordToggle from "@/components/molecules/password-toggle/password-toggle";
 import SMSTracking from "@/components/atoms/icons/sms-tracking";
 import Lock from "@/components/atoms/icons/lock";
 import Alert from "@/components/molecules/alert/alert";
@@ -45,7 +45,7 @@ export default function Home() {
               placeholder="Type your password here" 
               type={showPassword ? "text" : "password"}
               leftIcon={<Lock />}>
-              <PasswordToggler onToggle={togglePasswordVisibility} state={showPassword}/>
+              <PasswordToggle state={showPassword} onToggle={togglePasswordVisibility}/>
             </FormControl>
           </FormGroup>
           <div className="flex justify-content-between mb-2">

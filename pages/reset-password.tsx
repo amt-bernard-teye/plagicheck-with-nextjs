@@ -8,7 +8,7 @@ import Label from "@/components/atoms/label/label";
 import FormControl from "@/components/molecules/form-control/form-control";
 import Button from "@/components/atoms/button/button";
 import ArrowLeft from "@/components/atoms/icons/arrow-left";
-import PasswordToggler from "@/components/molecules/password-toggler/password-toggler";
+import PasswordToggle from "@/components/molecules/password-toggle/password-toggle";
 import Lock from "@/components/atoms/icons/lock";
 import { useAlert } from "@/lib/hooks/useAlert";
 import Alert from "@/components/molecules/alert/alert";
@@ -17,9 +17,14 @@ import { AlertVariant } from "@/lib/enums/alert-variant";
 export default function ResetPassword() {
   const { alertDetails, handleAlertDetails } = useAlert();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  function togglePasswordVisibility() {
-    setShowPassword(prevState => !prevState);
+  function togglePasswordVisibility(is: "password" | "confirmPassword") {
+    if (is === "password") {
+      setShowPassword(prevState => !prevState);
+    } else {
+      setShowConfirmPassword(prevState => !prevState);
+    }
   }
 
   return (
@@ -36,16 +41,18 @@ export default function ResetPassword() {
         <form>
           <FormGroup className="mb-2">
             <Label htmlFor="password">New Password</Label>
-            <FormControl placeholder="Type your new password" type="password" id="password"
-              leftIcon={<Lock />}>
-              <PasswordToggler onToggle={togglePasswordVisibility} state={showPassword}/>
+            <FormControl placeholder="Type your new password" 
+              type={showPassword ? "text" : "password"} id="password" leftIcon={<Lock />}>
+              <PasswordToggle state={showPassword} 
+                onToggle={() => togglePasswordVisibility("password")}/>
             </FormControl>
           </FormGroup>
           <FormGroup className="mb-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <FormControl placeholder="Confirm your password" type="password" id="confirmPassword"
-              leftIcon={<Lock />}>
-              <PasswordToggler onToggle={togglePasswordVisibility} state={showPassword}/>
+            <FormControl placeholder="Confirm your password" 
+              type={showConfirmPassword ? "text" : "password"} id="confirmPassword" leftIcon={<Lock />}>
+              <PasswordToggle state={showConfirmPassword} 
+                onToggle={() => togglePasswordVisibility("confirmPassword")}/>
             </FormControl>
           </FormGroup>
           <div className="flex flex-column gap-2">

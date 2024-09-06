@@ -1,12 +1,12 @@
 import EyeSlash from "@/components/atoms/icons/eye-slash";
 import Eye from "@/components/atoms/icons/eye";
 
-type PasswordTogglerProps = {
-  state?: boolean;
+type PasswordToggleProps = {
+  state: boolean;
   onToggle: () => void;
 }
 
-export default function PasswordToggler({state, onToggle: onClick}: PasswordTogglerProps) {
+export default function PasswordToggle({state, onToggle}: PasswordToggleProps) {
   return (
     <button style={{
       border: "none",
@@ -14,8 +14,8 @@ export default function PasswordToggler({state, onToggle: onClick}: PasswordTogg
       backgroundColor: "transparent",
       cursor: "pointer",
       lineHeight: "0.5",
-    }} type="button" onClick={onClick}>
-      {state 
+    }} type="button" onClick={onToggle}>
+      {state
         ? <EyeSlash />
         : <Eye /> }
     </button>
