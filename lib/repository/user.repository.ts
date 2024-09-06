@@ -115,8 +115,7 @@ export class UserRepository extends BaseRepository<User, UserProp, string> {
           {id: value},
           {email: value}
         ]
-      },
-      select: this.selectedProps()
+      }
     });
 
     await dbInstance.close();
