@@ -16,3 +16,7 @@
   flex-grow: 1;
   border: none;
 }
+
+.inputError {
+  border-color: var(--error-100);
+}
