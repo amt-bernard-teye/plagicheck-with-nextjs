@@ -105,13 +105,16 @@ export class UserRepository extends BaseRepository<User, UserProp, string> {
   }
 
 
-  async find(id: string): Promise<User | null> {
+  async find(value: string): Promise<User | null> {
     const dbInstance = DbConnection.getInstance();
     const connection = await dbInstance.open();
 
     const user = await connection.user.findFirst({
       where: {
-        id: id
+        OR: [
+          {id: value},
+          {email: value}
+        ]
       },
       select: this.selectedProps()
     });
