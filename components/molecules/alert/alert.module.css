@@ -1,0 +1,44 @@
+.alert {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 554px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.alertError {
+  color: var(--error-100);
+  border-color: var(--error-100);
+}
+
+.alertSuccess {
+  color: var(--success-100);
+  border-color: var(--success-100);
+}
+
+.alertBtn {
+  font: inherit;
+  font-size: 24px;
+  line-height: 0.5;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--error-100);
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.alertBtn:hover {
+  background-color: var(--gray-800);
+}
