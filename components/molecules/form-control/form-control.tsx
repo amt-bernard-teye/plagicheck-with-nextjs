@@ -5,7 +5,7 @@ import styles from "./form-control.module.css";
 type FormControl = {
   leftIcon?: ReactNode
   children?: ReactNode,
-  hasError: boolean;
+  hasError?: boolean;
 } & ComponentPropsWithoutRef<"input">;
 
 export default function FormControl({hasError, leftIcon, children, ...props}: FormControl) {

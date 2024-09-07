@@ -4,6 +4,7 @@
   border: 1px solid var(--gray-700);
   padding: 10px 16px;
   border-radius: 8px;
+  background-color: var(--white);
 }
 
 .formControl:has(input:focus) {

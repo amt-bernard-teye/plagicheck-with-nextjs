@@ -1,0 +1,36 @@
+.header {
+  padding: 5px 21px 15px;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.searchIcon svg {
+  stroke: var(--gray-300);
+}
+
+.headerProfile {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .header {
+    background-color: var(--white);
+    padding: 15px 21px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .headerProfile {
+    display: block;
+  }
+
+  .search {
+    width: 307px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header {
+    padding: 19px 41px;
+  }
+}
