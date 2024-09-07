@@ -8,10 +8,13 @@
   overflow: hidden;
   transition: width .5s ease;
   border-right: 1px solid var(--gray-800);
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .drawerShow {
-  padding: 30px 25px;
+  padding-left: 25px;
+  padding-right: 25px;
   width: 70%;
 }
 
@@ -102,6 +105,8 @@
   margin-top: 105.12px;
 }
 
+.lgScreen {display: none;}
+
 @media (min-width: 992px) {
   .drawer {
     width: auto;
@@ -112,6 +117,7 @@
   .drawerNav {
     gap: 16px;
     padding: 30px 25px;
+    margin-top: 10px;
   }
 
   .drawerLink {
@@ -121,6 +127,9 @@
   .marginTop {
     margin-top: 40.12px;
   }
+
+  .smScreen { display: none; }
+  .lgScreen { display: block; }
 }
 
 
@@ -128,15 +137,16 @@
   .marginTop {
     margin-top: 125.12px;
   }
+
+  .drawerNav {
+    margin-top: 51.45px;
+  }
 }
 
 @media (min-width: 1400px) {
   .drawer {
     padding-top: 60px;
     padding-bottom: 60px;
-  }
-  .drawerNav {
-    margin-top: 91.45px;
   }
 
   .marginTop {

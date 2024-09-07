@@ -15,6 +15,7 @@ import BoxArrowLeft from "@/components/atoms/icons/box-arrow-left";
 import Gear from "@/components/atoms/icons/gear";
 import ClockHistory from "@/components/atoms/icons/clock-history";
 import Backdrop from "@/components/atoms/backdrop/backdrop";
+import UserProfile from "@/components/molecules/user-profile/user-profile";
 
 export type SideDrawerHandle = {
   onToggleDrawer: () => void;
@@ -48,7 +49,12 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
       {showDrawer && <Backdrop onClick={toggleDrawer} />}
       <aside className={`${styles.drawer} ${showDrawer && styles.drawerShow}`}>
         <div className="flex justify-content-center">
-          <AppLogo />
+          <div className={styles.lgScreen}>
+            <AppLogo />
+          </div>
+          <div className={styles.smScreen}>
+            <UserProfile />
+          </div>
         </div>
         <div className={styles.drawerNav}>
           <Link href="/dashboard" 
