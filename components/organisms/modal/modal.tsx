@@ -14,7 +14,7 @@ export default function Modal({title, children, onToggle}: ModalProps) {
     <>
       <Backdrop onClick={onToggle}/>
       <section className={styles.modal}>
-        <div className="flex align-items-center justify-content-between mb-2">
+        <div className="flex align-items-center justify-content-between mb-1-0">
           <h3>{title}</h3>
           <CloseButton onClick={onToggle}/>
         </div>
