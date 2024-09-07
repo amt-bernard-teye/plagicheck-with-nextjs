@@ -16,6 +16,8 @@ import Gear from "@/components/atoms/icons/gear";
 import ClockHistory from "@/components/atoms/icons/clock-history";
 import Backdrop from "@/components/atoms/backdrop/backdrop";
 import UserProfile from "@/components/molecules/user-profile/user-profile";
+import Modal from "../modal/modal";
+import Button from "@/components/atoms/button/button";
 
 export type SideDrawerHandle = {
   onToggleDrawer: () => void;
@@ -25,6 +27,7 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
   const { pathname } = useRouter();
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useImperativeHandle(ref, () => {
     return {
@@ -40,6 +43,10 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
 
   function toggleDrawer() {
     setShowDrawer(prevState => !prevState);
+  }
+
+  function toggleLogoutModal() {
+    setShowLogoutModal(prevState => !prevState);
   }
 
   let hasChecker = pathname.includes("checker");
@@ -103,11 +110,27 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
             <Gear/> Account Settings
           </Link>
 
-          <button className={`${styles.drawerLink} ${styles.marginTop}`} onClick={toggleDropdown}>
+          <button className={`${styles.drawerLink} ${styles.marginTop}`} onClick={toggleLogoutModal}>
             <BoxArrowLeft/> Logout
           </button>
         </div>
       </aside>
+
+      {showLogoutModal && (
+        <Modal title="Logout" onToggle={toggleLogoutModal}>
+          <form>
+            <p className="line-height-24 mb-2">Are you sure you want to log out? By logging out, you will be securely logged out of the system and your session will be ended.</p>
+            <div className="flex gap-19 h-44">
+              <div className="col-6 flex flex-column">
+                <Button variant="secondary" type="button" onClick={toggleLogoutModal}>No</Button>
+              </div>
+              <div className="col-6 flex flex-column">
+                <Button variant="danger" type="button">Yes</Button>
+              </div>
+            </div>
+          </form>
+        </Modal>
+      )}
     </>
   );
 });

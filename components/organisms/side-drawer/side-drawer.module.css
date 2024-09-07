@@ -16,6 +16,7 @@
   padding-left: 25px;
   padding-right: 25px;
   width: 70%;
+  z-index: 10;
 }
 
 .drawerNav {
