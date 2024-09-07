@@ -5,7 +5,7 @@ import styles from "./button.module.css";
 
 type ButtonProps = PropsWithChildren<{
   isLink?: boolean;
-  variant: "primary" | "secondary"
+  variant: "primary" | "secondary" | "danger"
 }> & ComponentPropsWithoutRef<"button">;
 
 export default function Button({variant, children, ...props}: ButtonProps) {
@@ -13,6 +13,8 @@ export default function Button({variant, children, ...props}: ButtonProps) {
 
   if (variant === "primary") {
     btnVariant = styles.btnPrimary;
+  } else if (variant === "danger") {
+    btnVariant = styles.btnDanger;
   } else {
     btnVariant = styles.btnSecondary;
   }

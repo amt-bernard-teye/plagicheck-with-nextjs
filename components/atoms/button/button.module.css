@@ -3,22 +3,27 @@
   border: none;
   outline: none;
   background-color: transparent;
-  padding: 10px 25px;
+  padding: 9px 25px;
   cursor: pointer;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid transparent;
 }
 
 .btnPrimary {
   background-color: var(--sea-blue-100);
   color: var(--white);
+  border-color: var(--sea-blue-100);
 }
 
 .btnPrimary:hover {
   background-color: var(--sea-blue-500);
+  border-color: var(--sea-blue-500);
 }
+
+.btnPrimary:active {background-color: var(--sea-blue-900);}
 
 .btn:disabled {
   opacity: 0.2;
@@ -26,10 +31,8 @@
 }
 
 .btnSecondary {
-  border: 1px solid var(--gray-700);
-  padding-top: 9px;
-  padding-bottom: 9px;
-  line-height: 0.5;
+  border-color: var(--gray-700);
+  /* line-height: 0.5; */
   gap: 8px;
 }
 
@@ -37,14 +40,29 @@
   background-color: var(--gray-1000);
 }
 
+.btnSecondary:active {
+  background-color: var(--gray-900);
+}
+
+.btnDanger {
+  background-color: var(--error-100);
+  color: var(--white);
+  border-color: var(--error-100);
+}
+
+.btnDanger:hover {
+  background-color: var(--error-500);
+  border-color: var(--error-500);
+}
+
+.btnDanger:active {
+  background-color: var(--error-900);
+  border-color: var(--error-900);
+}
+
 
 @media (min-width: 768px) {
   .btn {
     padding: 15px 25px;
-  }
-
-  .btnSecondary {
-    padding-top: 11px;
-    padding-bottom: 10px;
   }
 }
