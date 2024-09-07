@@ -1,0 +1,145 @@
+.drawer {
+  width: 0%;
+  background-color: var(--gray-1000);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  transition: width .5s ease;
+  border-right: 1px solid var(--gray-800);
+}
+
+.drawerShow {
+  padding: 30px 25px;
+  width: 70%;
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  gap: 8px;
+}
+
+.drawerLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--black-200);
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.drawerLink svg {
+  stroke: var(--black-200);
+}
+
+.drawerLink:hover {
+  background-color: var(--gray-600);
+}
+
+.active,
+.activeFirst,
+.dropdownActiveFirst {
+  background-color: var(--sea-blue-100) !important;
+  color: var(--white);
+}
+
+.active svg,
+.dropdownActiveFirst svg {
+  stroke: var(--white) !important;
+}
+
+.activeFirst svg {
+  fill: var(--white);
+  stroke: none;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 0 25px;
+  gap: 4px;
+  height: 0;
+  overflow: hidden;
+  transition: height .5s ease;
+}
+
+.dropdownItem {
+  font-size: 0.875em;
+  padding: 5px 12px !important;
+}
+
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownActiveFirst svg {
+  fill: none !important;
+}
+
+.dropdownShow .dropdownContainer {
+  gap: 4px;
+}
+
+.dropdownShow .dropdown {
+  height: 86px;
+}
+
+.dropdownLastItem svg  {
+  fill: var(--white) !important;
+}
+
+.marginTop {
+  margin-top: 105.12px;
+}
+
+@media (min-width: 992px) {
+  .drawer {
+    width: auto;
+    flex-basis: 270px;
+    position: static;
+  }
+
+  .drawerNav {
+    gap: 16px;
+    padding: 30px 25px;
+  }
+
+  .drawerLink {
+    padding: 10px 12px;
+  }
+
+  .marginTop {
+    margin-top: 40.12px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  .marginTop {
+    margin-top: 125.12px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .drawer {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .drawerNav {
+    margin-top: 91.45px;
+  }
+
+  .marginTop {
+    margin-top: 205.12px;
+  }
+}
