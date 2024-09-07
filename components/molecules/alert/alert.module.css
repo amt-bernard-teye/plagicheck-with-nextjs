@@ -24,21 +24,3 @@
   color: var(--success-100);
   border-color: var(--success-100);
 }
-
-.alertBtn {
-  font: inherit;
-  font-size: 24px;
-  line-height: 0.5;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  color: var(--error-100);
-  cursor: pointer;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-}
-
-.alertBtn:hover {
-  background-color: var(--gray-800);
-}

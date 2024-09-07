@@ -1,10 +1,9 @@
-import { IoClose } from "react-icons/io5";
-
 import styles from "./alert.module.css";
 import { archivo } from "@/lib/utils/font";
 import CloseCircle from "@/components/atoms/icons/close-circle";
 import CheckCircle from "@/components/atoms/icons/check-circle";
 import { AlertVariant } from "@/lib/enums/alert-variant";
+import CloseButton from "@/components/atoms/close-button/close-button";
 
 type AlertProps = {
   details: {
@@ -26,9 +25,7 @@ export default function Alert({details, onToggle}: AlertProps) {
           : <CheckCircle /> }
         <p>{ message }</p>
       </div>
-      <button className={styles.alertBtn} onClick={onToggle}>
-        <IoClose />
-      </button>
+      <CloseButton />
     </div>
   );
 }
