@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 15px 21px;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.headerTitle {
+  font-size: 1.2em;
+  margin-bottom: 8px; 
+}
+
+@media (min-width: 992px) {
+  .header {
+    padding: 15px 21px;
+    flex-direction: row;
+    gap: 0;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header {
+    padding: 19px 41px;
+  }
+}
