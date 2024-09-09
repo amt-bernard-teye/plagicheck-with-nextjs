@@ -18,6 +18,10 @@
   border: none;
 }
 
+.formControl input::placeholder {
+  color: var(--gray-700);
+}
+
 .inputError {
   border-color: var(--error-100);
 }
