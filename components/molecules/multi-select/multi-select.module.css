@@ -1,0 +1,52 @@
+.multiSelect {
+  position: relative;
+}
+
+.multiSelectAction {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 16px;
+  background-color: transparent;
+  font: inherit;
+  border: 1px solid var(--gray-700);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.multiSelectAction svg {
+  stroke: var(--gray-700);
+}
+
+.placeholder {
+  color: var(--gray-700);
+}
+
+.multiSelectList {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(0,0,0,0.3);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  max-height: 175px;
+  overflow-y: auto;
+}
+
+.multiSelectList label {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.multiSelectList label:hover {
+  color: var(--sea-blue-100);
+}
+
+.multiSelectList input[type="radio"]:checked + span {
+  color: var(--sea-blue-100);
+}
