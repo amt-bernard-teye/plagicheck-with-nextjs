@@ -10,6 +10,7 @@
 .justify-content-center { justify-content: center; }
 .align-items-center {align-items: center;}
 
+.gap-1 {gap: 8px;}
 .gap-2 {gap: 16px;}
 .gap-19 { gap: 19px; }
 
@@ -35,4 +36,14 @@
 
 .col-6 {
   width: calc(50% - 8px);
+}
+
+.section-padding {
+  padding: 15px 21px;
+}
+
+@media (min-width: 1200px) {
+  .section-padding {
+    padding: 19px 41px;
+  }
 }
