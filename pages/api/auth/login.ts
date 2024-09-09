@@ -37,13 +37,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const {password, ...user} = existingUser;
-    const token = sign({sub: existingUser.id}, process.env.SECRET_KEY!, {expiresIn: "24h"});
+    const token = sign({id: existingUser.id, email: existingUser.email}, process.env.SECRET_KEY!, {expiresIn: "24h"});
     const tokenDuration = 60 * 60 * 24;
     const authSession = cookie.serialize("_auth-tk", token, {
       httpOnly: true,
-      maxAge: tokenDuration
+      maxAge: tokenDuration,
+      path: "/"
     });
-
 
     res.setHeader("Set-Cookie", authSession);
     res.status(StatusCode.SUCCESS).json({
