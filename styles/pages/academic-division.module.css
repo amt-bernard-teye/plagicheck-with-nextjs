@@ -1,0 +1,17 @@
+.actions {
+  width: 323px;
+}
+
+.actionFirst {
+  flex-basis: 170px;
+}
+
+.actionSecond {
+  flex-basis: 137px;
+}
+
+.actionFirst,
+.actionSecond {
+  display: flex;
+  flex-direction: column;
+}

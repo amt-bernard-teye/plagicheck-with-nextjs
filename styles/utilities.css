@@ -1,6 +1,8 @@
 .mb-2 { margin-bottom: 16px; }
 .mb-1-0 { margin-bottom: 10px; }
 
+.mt-2 { margin-top: 16px; }
+
 .flex { display: flex; }
 .flex-column { flex-direction: column; }
 
