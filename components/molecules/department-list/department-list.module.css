@@ -1,0 +1,98 @@
+.list {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: auto;
+}
+
+.listItem,
+.action {
+  padding: 8px;
+  display: inline-block;
+  border-radius: 8px;
+  color: var(--black-200);
+  opacity: 0.7;
+}
+
+.listItem {
+  background-color: var(--gray-1000);
+}
+
+.action {
+  outline: none;
+  border: 2px solid var(--gray-1000);
+  background-color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.action:hover {
+  border-color: var(--gray-800)
+}
+
+.actualList {
+  position: relative;
+}
+
+.row {
+  position: absolute;
+  top: 23px;
+  right: 8px;
+  background-color: var(--white);
+  width: 315px;
+  box-shadow: 0 4px 4px rgba(0,0,0,0.3);
+  border-radius: 8px;
+  border: 1px solid var(--gray-1000);
+  padding: 8px;
+  z-index: 2;
+}
+
+.col {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionItem {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.actionItem:not(:last-child) {
+  margin-right: 16px;
+}
+
+.editAction {
+  stroke: var(--black-400);
+}
+
+.editAction:hover svg {
+  stroke: var(--sea-blue-100);
+  fill: var(--sea-blue-100);
+}
+
+.editAction:hover svg path:nth-child(2) {
+  stroke: var(--white);
+}
+
+.dangerAction {
+  stroke: var(--error-100);
+}
+
+.dangerAction:hover svg {
+  fill: var(--error-100);
+}
+
+.dangerAction:hover path:nth-child(4),
+.dangerAction:hover path:nth-child(5) {
+  stroke: var(--white);
+}
+
+@media (min-width: 768px) {
+  .row {
+    padding: 16px;
+  }
+}
