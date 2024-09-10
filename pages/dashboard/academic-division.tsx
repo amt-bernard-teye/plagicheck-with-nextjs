@@ -13,6 +13,9 @@ import DataTable from "@/components/organisms/datatable/datatable";
 import DepartmentList from "@/components/molecules/department-list/department-list";
 import DataTableActions from "@/components/molecules/datatable-actions/datatable-actions";
 import { AcademicAction } from "@/lib/enums/academic-actions";
+import { useAlert } from "@/lib/hooks/useAlert";
+import Alert from "@/components/molecules/alert/alert";
+import { AlertVariant } from "@/lib/enums/alert-variant";
 
 enum AcademicTab {
   FACULTY = "faculty",
@@ -21,6 +24,7 @@ enum AcademicTab {
 
 export default function AcademicDivision() {
   const router = useRouter();
+  const { alertDetails, handleAlertDetails } = useAlert();
 
   function toggleModal(tab: AcademicTab, action: AcademicAction) {
     const params = new URLSearchParams();
@@ -38,7 +42,7 @@ export default function AcademicDivision() {
 
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
-    form = <FacultyForm action={action as AcademicAction}/>
+    form = <FacultyForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
   } else if (tab === AcademicTab.DEPARTMENT) {
     modalHeading = modalAction + " Department";
     form = <DepartmentForm action={action as AcademicAction}/>
@@ -86,22 +90,6 @@ export default function AcademicDivision() {
                 </DataTableActions>
               </td>
             </tr>
-            <tr>
-              <td>Faculty of Applied Science</td>
-              <td>
-                <DepartmentList 
-                  onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
-                  onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
-              </td>
-              <td>
-                <DataTableActions>
-                  <button
-                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT)}>Edit Faculty</button>
-                  <button
-                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE)}>Delete Faculty</button>
-                </DataTableActions>
-              </td>
-            </tr>
           </DataTable>
         </div>
         
@@ -113,6 +101,12 @@ export default function AcademicDivision() {
           </Modal>
         )}
       </Dashboard>
+
+      {alertDetails.message && (
+        <Alert 
+          details={alertDetails}
+          onToggle={() => handleAlertDetails("", AlertVariant.SUCCESS)}/>
+      )}
     </>
   );
 }
