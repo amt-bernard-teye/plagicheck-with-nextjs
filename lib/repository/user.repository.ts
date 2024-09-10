@@ -87,13 +87,13 @@ export class UserRepository extends BaseRepository<User, UserProp, string> {
   }
 
 
-  async delete(entity: User): Promise<void> {
+  async delete(id: string): Promise<void> {
     const dbInstance = DbConnection.getInstance();
     const connection = await dbInstance.open();
 
     await connection.user.update({
       where: {
-        id: entity.id
+        id: id
       },
       data: {
         status: AvailabilityStatus.UN_AVAILABLE

@@ -3,6 +3,6 @@ export abstract class BaseRepository<Type, Props, TypeId> {
 
   abstract create(entity: Type): Promise<Type>;
   abstract update(entity: Type): Promise<Type>;
-  abstract delete(entity: Type): Promise<void>;
+  abstract delete(id: TypeId): Promise<void>;
   abstract find(id: TypeId): Promise<Type | null>;
 }
