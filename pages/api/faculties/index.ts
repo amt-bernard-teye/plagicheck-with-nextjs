@@ -1,5 +1,6 @@
 import { StatusCode } from "@/lib/enums/status-code";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
+import { getQueryPage } from "@/lib/utils/get-query-page";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -19,14 +20,13 @@ const validationSchema = Yup.object({
         .matches(/^[a-zA-Z ]+$/, "Only letters and white spaces are allowed")
         .trim()
 });
+const repo = new FacultyRepository();
 
 async function createFaculty(req: NextApiRequest, res: NextApiResponse) {
   const data = <{name: string}>req.body;
 
   try {
     const validatedData = await validationSchema.validate(data);
-    
-    const repo = new FacultyRepository();
     const faculty = await repo.create(validatedData);
 
     res.status(StatusCode.CREATED).json({
@@ -40,12 +40,29 @@ async function createFaculty(req: NextApiRequest, res: NextApiResponse) {
     if (error instanceof Yup.ValidationError) {
       message = "Validation failed";
     }
-    console.log(error);
+    
     res.status(StatusCode.SERVER).json({ message });
   }
 }
 
 
-function getFaculties(req: NextApiRequest, res: NextApiResponse) {
+async function getFaculties(req: NextApiRequest, res: NextApiResponse) {
+  const values = getQueryPage(req);
 
+  try {
+    const [faculties, totalRows] = await Promise.all([
+      repo.paginate(values.query, values.page),
+      repo.count(values.query)
+    ]);
+
+    res.status(StatusCode.SUCCESS).json({
+      count: totalRows,
+      data: faculties
+    });
+  }
+  catch(error) {
+    res.status(StatusCode.SERVER).json({
+      message: "Something went wrong"
+    });
+  }
 }

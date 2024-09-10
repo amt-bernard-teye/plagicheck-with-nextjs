@@ -2,8 +2,11 @@ import { AvailabilityStatus } from "@prisma/client";
 import { Faculty, FacultyProp } from "../types/faculty.type";
 import { DbConnection } from "../utils/db-connection.util";
 import { BaseRepository } from "./base.repository";
+import { IPaginator } from "../interfaces/paginator";
+import { IMultipleFinder } from "../interfaces/multiple-finder";
 
-export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, number | string> {
+export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, number | string>
+  implements IMultipleFinder<Faculty>, IPaginator<Faculty> {
   protected selectedProps(): FacultyProp {
     return {
       id: true,
@@ -89,5 +92,65 @@ export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, numb
     await db.close();
 
     return faculty;
+  }
+
+  
+  async paginate(value: string, page: number): Promise<Faculty[]> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const faculties = await prisma.faculty.findMany({
+      take: this.rows,
+      skip: page * this.rows,
+      where: {
+        status: AvailabilityStatus.AVAILABLE,
+        name: {
+          contains: value,
+          mode: "insensitive"
+        }
+      },
+      select: this.selectedProps()
+    });
+
+    await db.close();
+
+    return faculties;
+  }
+
+
+  async count(value: string = ""): Promise<number> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const totalRows = await prisma.faculty.count({
+      where: {
+        status: AvailabilityStatus.AVAILABLE,
+        name: {
+          contains: value,
+          mode: "insensitive"
+        }
+      }
+    });
+
+    await db.close();
+
+    return totalRows;
+  }
+
+
+  async findAll(): Promise<Faculty[]> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const faculties = await prisma.faculty.findMany({
+      where: {
+        status: AvailabilityStatus.AVAILABLE,
+      },
+      select: this.selectedProps()
+    });
+
+    await db.close();
+
+    return faculties;
   }
 }
