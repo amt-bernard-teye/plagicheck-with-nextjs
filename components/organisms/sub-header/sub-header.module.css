@@ -13,7 +13,6 @@
 
 @media (min-width: 992px) {
   .header {
-    padding: 15px 21px;
     flex-direction: row;
     gap: 0;
     justify-content: space-between;
