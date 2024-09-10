@@ -1,0 +1,28 @@
+/* .datatable {
+
+} */
+
+.table {
+  width: 100%;
+  vertical-align: middle;
+}
+
+.table,
+.table th,
+.table td {
+  border-collapse: collapse;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--gray-900);
+}
+
+.table th {
+  text-align: left;
+  padding: 12px 15px;
+  background-color: var(--gray-1000);
+}
+
+.table td {
+  padding: 7px 15px;
+}
