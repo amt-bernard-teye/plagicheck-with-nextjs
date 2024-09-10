@@ -9,6 +9,9 @@ import styles from "@/styles/pages/academic-division.module.css";
 import Modal from "@/components/organisms/modal/modal";
 import FacultyForm from "@/components/organisms/faculty-form/faculty-form";
 import DepartmentForm from "@/components/organisms/department-form/department-form";
+import DataTable from "@/components/organisms/datatable/datatable";
+import DepartmentList from "@/components/molecules/department-list/department-list";
+import DataTableActions from "@/components/molecules/datatable-actions/datatable-actions";
 
 enum AcademicTab {
   FACULTY = "faculty",
@@ -31,12 +34,12 @@ export default function AcademicDivision() {
     router.replace(`${router.pathname}?${params.toString()}`);
   }
 
-
   let tab = router.query.tab as string || "";
   let action = router.query.action as string || "";
   let modalAction = action.substring(0, 1).toUpperCase() + action.substring(1, action.length);
   let modalHeading = "";
   let form: React.JSX.Element | undefined;
+  let columnHeadings = ["Faculty name", "Departments", ""];
 
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
@@ -70,6 +73,34 @@ export default function AcademicDivision() {
             </div>
           </div>
         </SubHeader>
+        <div className="section-padding">
+          <DataTable columnHeadings={columnHeadings}>
+            <tr>
+              <td>Faculty of Applied Science</td>
+              <td>
+                <DepartmentList />
+              </td>
+              <td>
+                <DataTableActions>
+                  <button>Edit Faculty</button>
+                  <button>Delete Faculty</button>
+                </DataTableActions>
+              </td>
+            </tr>
+            <tr>
+              <td>Faculty of Applied Science</td>
+              <td>
+                <DepartmentList />
+              </td>
+              <td>
+                <DataTableActions>
+                  <button>Edit Faculty</button>
+                  <button>Delete Faculty</button>
+                </DataTableActions>
+              </td>
+            </tr>
+          </DataTable>
+        </div>
         
         {tab && (
           <Modal 
