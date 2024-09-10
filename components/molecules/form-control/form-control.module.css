@@ -23,5 +23,12 @@
 }
 
 .inputError {
-  border-color: var(--error-100);
+  border-color: var(--error-100) !important;
+}
+
+.formControl span svg {
+  fill: var(--error-100);
+  width: 20px;
+  height: 20px;
+  stroke: var(--white);
 }

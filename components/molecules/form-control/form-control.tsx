@@ -1,6 +1,7 @@
 import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import styles from "./form-control.module.css";
+import ExclamationDanger from "@/components/atoms/icons/exclamation-danger";
 
 type FormControl = {
   leftIcon?: ReactNode
@@ -13,6 +14,7 @@ export default function FormControl({hasError, leftIcon, children, ...props}: Fo
     <div className={`${styles.formControl} ${hasError && styles.inputError}`}>
       {leftIcon}
       <input {...props}/>
+      {hasError && <span><ExclamationDanger /></span>}
       { children }
     </div>
   );
