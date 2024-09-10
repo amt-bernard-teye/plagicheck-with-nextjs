@@ -12,16 +12,11 @@ import DepartmentForm from "@/components/organisms/department-form/department-fo
 import DataTable from "@/components/organisms/datatable/datatable";
 import DepartmentList from "@/components/molecules/department-list/department-list";
 import DataTableActions from "@/components/molecules/datatable-actions/datatable-actions";
+import { AcademicAction } from "@/lib/enums/academic-actions";
 
 enum AcademicTab {
   FACULTY = "faculty",
   DEPARTMENT = "department",
-};
-
-enum AcademicAction {
-  ADD = "add",
-  EDIT = "edit",
-  DELETE = "delete"
 };
 
 export default function AcademicDivision() {
@@ -43,10 +38,10 @@ export default function AcademicDivision() {
 
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
-    form = <FacultyForm />
+    form = <FacultyForm action={action as AcademicAction}/>
   } else if (tab === AcademicTab.DEPARTMENT) {
     modalHeading = modalAction + " Department";
-    form = <DepartmentForm />
+    form = <DepartmentForm action={action as AcademicAction}/>
   }
 
   return (
@@ -78,24 +73,32 @@ export default function AcademicDivision() {
             <tr>
               <td>Faculty of Applied Science</td>
               <td>
-                <DepartmentList />
+                <DepartmentList 
+                  onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
+                  onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
               </td>
               <td>
                 <DataTableActions>
-                  <button>Edit Faculty</button>
-                  <button>Delete Faculty</button>
+                  <button
+                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT)}>Edit Faculty</button>
+                  <button
+                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE)}>Delete Faculty</button>
                 </DataTableActions>
               </td>
             </tr>
             <tr>
               <td>Faculty of Applied Science</td>
               <td>
-                <DepartmentList />
+                <DepartmentList 
+                  onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
+                  onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
               </td>
               <td>
                 <DataTableActions>
-                  <button>Edit Faculty</button>
-                  <button>Delete Faculty</button>
+                  <button
+                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT)}>Edit Faculty</button>
+                  <button
+                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE)}>Delete Faculty</button>
                 </DataTableActions>
               </td>
             </tr>
