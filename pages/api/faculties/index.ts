@@ -1,16 +1,25 @@
 import { StatusCode } from "@/lib/enums/status-code";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
+import { CheckApiAccess } from "@/lib/utils/check-api-access";
 import { getQueryPage } from "@/lib/utils/get-query-page";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  CheckApiAccess(req, res);
+
   if (req.method === "POST") {
-    createFaculty(req, res);
+    await createFaculty(req, res);
+    return;
   }
-  else {
-    getFaculties(req, res);
+  else if (req.method === "GET") {
+    await getFaculties(req, res);
+    return;
   }
+
+  return res.status(StatusCode.BAD_REQUEST).json({
+    message: "Route not found"
+  });
 }
 
 
@@ -36,12 +45,14 @@ async function createFaculty(req: NextApiRequest, res: NextApiResponse) {
   }
   catch(error) {
     let message = "Something went wrong";
+    let status = StatusCode.SERVER;
 
     if (error instanceof Yup.ValidationError) {
       message = "Validation failed";
+      status = StatusCode.BAD_REQUEST;
     }
-    
-    res.status(StatusCode.SERVER).json({ message });
+
+    res.status(status).json({ message });
   }
 }
 
