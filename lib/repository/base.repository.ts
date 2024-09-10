@@ -1,4 +1,5 @@
 export abstract class BaseRepository<Type, Props, TypeId> {
+  protected rows = 9;
   protected abstract selectedProps(): Props;
 
   abstract create(entity: Type): Promise<Type>;
