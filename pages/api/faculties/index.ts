@@ -1,7 +1,9 @@
+import { FetchForm } from "@/lib/enums/fetch-form";
 import { StatusCode } from "@/lib/enums/status-code";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
+import { Faculty } from "@/lib/types/faculty.type";
 import { CheckApiAccess } from "@/lib/utils/check-api-access";
-import { getQueryPage } from "@/lib/utils/get-query-page";
+import { getQueryPageForm } from "@/lib/utils/get-query-page-form";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -58,18 +60,29 @@ async function createFaculty(req: NextApiRequest, res: NextApiResponse) {
 
 
 async function getFaculties(req: NextApiRequest, res: NextApiResponse) {
-  const values = getQueryPage(req);
+  const values = getQueryPageForm(req);
+  let faculties: Faculty[] = [];
+  let totalRows = 0;
 
   try {
-    const [faculties, totalRows] = await Promise.all([
-      repo.paginate(values.query, values.page),
-      repo.count(values.query)
-    ]);
-
-    res.status(StatusCode.SUCCESS).json({
-      count: totalRows,
-      data: faculties
-    });
+    if (values.form === FetchForm.PAGINATE) {
+      [faculties, totalRows] = await Promise.all([
+        repo.paginate(values.query, values.page),
+        repo.count(values.query)
+      ]);
+  
+      res.status(StatusCode.SUCCESS).json({
+        count: totalRows,
+        data: faculties
+      });
+    }
+    else {
+      faculties = await repo.findAll();
+      
+      res.status(StatusCode.SUCCESS).json({
+        data: faculties
+      });
+    }
   }
   catch(error) {
     res.status(StatusCode.SERVER).json({
