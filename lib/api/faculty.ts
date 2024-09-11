@@ -22,7 +22,7 @@ export async function createFaculty(formData: {name: string}) {
 
 export async function getFaculties(form: FetchForm = FetchForm.PAGINATE, query: string = "", page: number = 0) {
   const params = new URLSearchParams();
-  params.append("paginate", form);
+  params.append("form", form);
   params.append("page", page.toString());
   params.append("q", query);
 
