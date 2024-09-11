@@ -4,6 +4,7 @@ import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { Faculty } from "@/lib/types/faculty.type";
 import { CheckApiAccess } from "@/lib/utils/check-api-access";
 import { getQueryPageForm } from "@/lib/utils/get-query-page-form";
+import { handleError } from "@/lib/utils/handle-error";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -45,16 +46,8 @@ async function createFaculty(req: NextApiRequest, res: NextApiResponse) {
       data: faculty
     });
   }
-  catch(error) {
-    let message = "Something went wrong";
-    let status = StatusCode.SERVER;
-
-    if (error instanceof Yup.ValidationError) {
-      message = "Validation failed";
-      status = StatusCode.BAD_REQUEST;
-    }
-
-    res.status(status).json({ message });
+  catch(error: any) {
+    handleError(error, res);
   }
 }
 
