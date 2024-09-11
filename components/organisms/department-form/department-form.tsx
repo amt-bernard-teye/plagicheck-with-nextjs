@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import Button from "@/components/atoms/button/button";
 import FormGroup from "@/components/atoms/form-group/form-group";
@@ -27,6 +28,13 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
     initialValues: {
       name: ""
     },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Department name is required")
+        .matches(/^[a-zA-Z ]*$/, "Only letters and white spaces are allowed")
+        .min(3, "Must be at least 3 characters")
+        .max(30, "Must be 30 characters or less")
+    }),
     onSubmit: handleSubmit
   });
 
@@ -59,6 +67,13 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
     }
     
     setShowFacultyError(false);
+
+    try {
+      
+    }
+    catch(error: any) {
+
+    }
   }
 
 
