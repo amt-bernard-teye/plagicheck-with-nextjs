@@ -13,6 +13,7 @@ import { FetchForm } from "@/lib/enums/fetch-form";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Faculty } from "@/lib/types/faculty.type";
 import InputError from "@/components/atoms/input-error/input-error";
+import { createDepartment } from "@/lib/api/department";
 
 type DepartmentFormProps = {
   action: AcademicAction;
@@ -33,7 +34,7 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
         .required("Department name is required")
         .matches(/^[a-zA-Z ]*$/, "Only letters and white spaces are allowed")
         .min(3, "Must be at least 3 characters")
-        .max(30, "Must be 30 characters or less")
+        .max(50, "Must be 30 characters or less")
     }),
     onSubmit: handleSubmit
   });
@@ -60,7 +61,7 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
 
 
 
-  function handleSubmit(values: {name: string}) {
+  async function handleSubmit(values: {name: string}) {
     if (!selectedFaculty) {
       setShowFacultyError(true);
       return;
@@ -69,10 +70,16 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
     setShowFacultyError(false);
 
     try {
-      
+      const result = await createDepartment({
+        name: values.name,
+        facultyId: selectedFaculty.id!
+      });
+      onShowAlert(result.message, AlertVariant.SUCCESS);
+      formik.resetForm();
+      setSelectedFaculty(undefined);
     }
     catch(error: any) {
-
+      onShowAlert(error.message, AlertVariant.SUCCESS);
     }
   }
 

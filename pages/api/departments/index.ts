@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
     .required("Department name is required")
     .matches(/^[a-zA-Z ]*$/, "Only letters and white spaces are allowed")
     .min(3, "Must be at least 3 characters")
-    .max(30, "Must be 30 characters or less"),
+    .max(50, "Must be 30 characters or less"),
   facultyId: Yup.string()
     .required("Faculty Id is required")
     .matches(/^[0-9]*$/, "Only numbers are allowed")
