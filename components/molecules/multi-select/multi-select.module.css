@@ -18,6 +18,10 @@
   stroke: var(--gray-700);
 }
 
+.multiSelectError {
+  border-color: var(--error-100);
+}
+
 .placeholder {
   color: var(--gray-700);
 }
@@ -53,4 +57,8 @@
 
 .selected {
   color: var(--black-200);
+}
+
+.multiError {
+  display: block;
 }

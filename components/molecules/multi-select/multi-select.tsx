@@ -10,9 +10,10 @@ type MultiSelectProps = {
   items: Faculty[],
   selectedItem: Faculty | undefined;
   onSelecteItem: (id: number) => void;
+  hasError?: boolean;
 }
 
-export default function MultiSelect({placeholder, items, selectedItem, onSelecteItem}: MultiSelectProps) {
+export default function MultiSelect({hasError, placeholder, items, selectedItem, onSelecteItem}: MultiSelectProps) {
   const [showList, setShowList] = useState(false);
 
   function handleSelectedItem(id: number) {
@@ -25,9 +26,11 @@ export default function MultiSelect({placeholder, items, selectedItem, onSelecte
 
   return (
     <div className={styles.multiSelect}>
-      <button className={styles.multiSelectAction} type="button" onClick={() => setShowList(!showList)}>
+      <button className={`${styles.multiSelectAction} ${hasError && styles.multiSelectError}`} type="button" onClick={() => setShowList(!showList)}>
         <span className={fieldStyle}>{fieldText}</span>
-        {!showList ? <CaretDown /> : <CaretUp />}
+        <span className="flex gap-1">
+          {!showList ? <CaretDown /> : <CaretUp />}
+        </span>
       </button>
       {showList && (
         <div className={styles.multiSelectList}>

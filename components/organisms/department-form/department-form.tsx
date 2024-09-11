@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useFormik } from "formik";
 
 import Button from "@/components/atoms/button/button";
 import FormGroup from "@/components/atoms/form-group/form-group";
@@ -10,6 +11,7 @@ import { getFaculties } from "@/lib/api/faculty";
 import { FetchForm } from "@/lib/enums/fetch-form";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Faculty } from "@/lib/types/faculty.type";
+import InputError from "@/components/atoms/input-error/input-error";
 
 type DepartmentFormProps = {
   action: AcademicAction;
@@ -17,9 +19,16 @@ type DepartmentFormProps = {
 }
 
 export default function DepartmentForm({action, onShowAlert}: DepartmentFormProps) {
-  let [faculties, setFaculties] = useState<Faculty[]>([]);
-  let [dataFetched, setDataFetched] = useState(false);
-  let [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
+  const [faculties, setFaculties] = useState<Faculty[]>([]);
+  const [dataFetched, setDataFetched] = useState(false);
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
+  const [showFacultyError, setShowFacultyError] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+      name: ""
+    },
+    onSubmit: handleSubmit
+  });
 
 
   useEffect(() => {
@@ -42,10 +51,22 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
   }, [dataFetched]);
 
 
+
+  function handleSubmit(values: {name: string}) {
+    if (!selectedFaculty) {
+      setShowFacultyError(true);
+      return;
+    }
+    
+    setShowFacultyError(false);
+  }
+
+
   function handleSelectedFaculty(id: number) {
     const faculty = faculties.find(item => item.id === id);
     if (faculty) {
       setSelectedFaculty(faculty);
+      setShowFacultyError(false);
     }
   }
 
@@ -53,12 +74,18 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
   let isEditOrAdd = action === AcademicAction.ADD || action === AcademicAction.EDIT;
 
   return (
-    <form>
+    <form onSubmit={formik.handleSubmit}>
       {isEditOrAdd ? (
         <>
           <FormGroup className="mb-2">
             <Label htmlFor="department_name">Department Name</Label>
-            <FormControl type="text" placeholder="Enter department name here" id="department_name"/>
+            <FormControl 
+              type="text" 
+              placeholder="Enter department name here" 
+              id="department_name"
+              {...formik.getFieldProps("name")}
+              hasError={!!formik.errors.name && formik.touched.name}/>
+            {(formik.errors.name && formik.touched.name) && <InputError message={formik.errors.name} />}
           </FormGroup>
           <FormGroup className="mb-2">
             <Label htmlFor="faculty">Select faculty</Label>
@@ -66,7 +93,9 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
               items={faculties}
               selectedItem={selectedFaculty}
               onSelecteItem={handleSelectedFaculty}
-              placeholder="Assign department to a faculty here"/>
+              placeholder="Assign department to a faculty here"
+              hasError={showFacultyError} />
+            {showFacultyError && <InputError message="Faculty is required" />}
           </FormGroup>
           <div className="flex gap-2">
             <div className="col-6 flex flex-column">
