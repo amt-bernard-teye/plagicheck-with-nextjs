@@ -38,3 +38,40 @@ export async function getFaculties(form: FetchForm = FetchForm.PAGINATE, query: 
 
   return result;
 }
+
+
+export async function updateFaculty(formData: {name: string}, facultyId: number) {
+  const response = await fetch(`http://localhost:3000/api/faculties/${facultyId}`, {
+    method: "PUT",
+    body: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  const result = await response.json();
+
+  if (response.status !== StatusCode.SUCCESS) {
+    throw new Error(result.message);
+  }
+
+  return result;
+}
+
+
+export async function deleteFaculty(facultyId: number) {
+  const response = await fetch(`http://localhost:3000/api/faculties/${facultyId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  const result = await response.json();
+
+  if (response.status !== StatusCode.SUCCESS) {
+    throw new Error(result.message);
+  }
+
+  return result;
+}
