@@ -16,21 +16,66 @@ import { AcademicAction } from "@/lib/enums/academic-actions";
 import { useAlert } from "@/lib/hooks/useAlert";
 import Alert from "@/components/molecules/alert/alert";
 import { AlertVariant } from "@/lib/enums/alert-variant";
+import { Faculty } from "@/lib/types/faculty.type";
+import { FacultyRepository } from "@/lib/repository/faculty.repository";
+import { checkAuthUser } from "@/lib/utils/check-auth-user";
+import { useState } from "react";
+
+
+export async function getServerSideProps(context: any) {
+  checkAuthUser(context);
+
+  try {
+    const facultyRepo = new FacultyRepository();
+    const [faculties, count] = await Promise.all([
+      facultyRepo.paginate("", 0),
+      facultyRepo.count('')
+    ]);
+
+    return {
+      props: {
+        data: faculties,
+        count
+      }
+    }
+  }
+  catch(error) {
+    return {
+      notFound: true
+    }
+  }
+}
+
 
 enum AcademicTab {
   FACULTY = "faculty",
   DEPARTMENT = "department",
 };
 
-export default function AcademicDivision() {
+type AcademicDivisionProps = {
+  count: number;
+  data: Faculty[]
+};
+
+export default function AcademicDivision({count, data: fetchedFaculties}: AcademicDivisionProps) {
   const router = useRouter();
   const { alertDetails, handleAlertDetails } = useAlert();
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
 
   function toggleModal(tab: AcademicTab, action: AcademicAction) {
     const params = new URLSearchParams();
     params.set("tab", tab);
     params.set("action", action);
     router.replace(`${router.pathname}?${params.toString()}`);
+  }
+
+  function handleSelectedFaculty(id: number) {
+    const faculty = fetchedFaculties.find(fac => fac.id === id);
+    setSelectedFaculty(faculty);
+  }
+
+  function handleSelectedDepartment(id: number) {
+
   }
 
   let tab = router.query.tab as string || "";
@@ -42,7 +87,7 @@ export default function AcademicDivision() {
 
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
-    form = <FacultyForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
+    form = <FacultyForm action={action as AcademicAction} onShowAlert={handleAlertDetails} selectedFaculty={selectedFaculty}/>
   } else if (tab === AcademicTab.DEPARTMENT) {
     modalHeading = modalAction + " Department";
     form = <DepartmentForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
@@ -74,22 +119,31 @@ export default function AcademicDivision() {
         </SubHeader>
         <div className="section-padding">
           <DataTable columnHeadings={columnHeadings}>
-            <tr>
-              <td>Faculty of Applied Science</td>
-              <td>
-                <DepartmentList 
-                  onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
-                  onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
-              </td>
-              <td>
-                <DataTableActions>
-                  <button
-                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT)}>Edit Faculty</button>
-                  <button
-                    onClick={() => toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE)}>Delete Faculty</button>
-                </DataTableActions>
-              </td>
-            </tr>
+            {fetchedFaculties.map(faculty => (
+              <tr key={faculty.id}>
+                <td>{faculty.name}</td>
+                <td>
+                  <DepartmentList
+                    list={faculty.departments}
+                    onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
+                    onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
+                </td>
+                <td>
+                  <DataTableActions>
+                    <button
+                      onClick={() => {
+                        toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT);
+                        handleSelectedFaculty(faculty.id!);
+                      }}>Edit Faculty</button>
+                    <button
+                      onClick={() => {
+                        toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE);
+                        handleSelectedFaculty(faculty.id!);
+                      }}>Delete Faculty</button>
+                  </DataTableActions>
+                </td>
+              </tr>
+            ))}
           </DataTable>
         </div>
         
