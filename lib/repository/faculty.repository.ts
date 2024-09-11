@@ -11,6 +11,7 @@ export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, numb
     return {
       id: true,
       name: true,
+      departments: true
     }
   }
 
@@ -102,12 +103,16 @@ export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, numb
     const faculties = await prisma.faculty.findMany({
       take: this.rows,
       skip: page * this.rows,
+      orderBy: {
+        id: "desc"
+      },
       where: {
         status: AvailabilityStatus.AVAILABLE,
         name: {
           contains: value,
           mode: "insensitive"
-        }
+        },
+        
       },
       select: this.selectedProps()
     });
@@ -143,6 +148,9 @@ export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, numb
     const prisma = await db.open();
 
     const faculties = await prisma.faculty.findMany({
+      orderBy: {
+        id: "desc"
+      },
       where: {
         status: AvailabilityStatus.AVAILABLE,
       },
