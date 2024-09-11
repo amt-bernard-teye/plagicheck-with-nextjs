@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { verify } from "jsonwebtoken";
 import { StatusCode } from "../enums/status-code";
 
-export async function CheckApiAccess(req: NextApiRequest, res: NextApiResponse) {
+export async function checkApiAccess(req: NextApiRequest, res: NextApiResponse) {
   const accessToken = req.cookies["_auth-tk"] || "";
 
   if (accessToken === "") {

@@ -2,14 +2,14 @@ import { FetchForm } from "@/lib/enums/fetch-form";
 import { StatusCode } from "@/lib/enums/status-code";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { Faculty } from "@/lib/types/faculty.type";
-import { CheckApiAccess } from "@/lib/utils/check-api-access";
+import { checkApiAccess } from "@/lib/utils/check-api-access";
 import { getQueryPageForm } from "@/lib/utils/get-query-page-form";
 import { handleError } from "@/lib/utils/handle-error";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  CheckApiAccess(req, res);
+  checkApiAccess(req, res);
 
   if (req.method === "POST") {
     await createFaculty(req, res);
