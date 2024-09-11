@@ -50,3 +50,7 @@
 .multiSelectList input[type="radio"]:checked + span {
   color: var(--sea-blue-100);
 }
+
+.selected {
+  color: var(--black-200);
+}

@@ -45,7 +45,7 @@ export default function AcademicDivision() {
     form = <FacultyForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
   } else if (tab === AcademicTab.DEPARTMENT) {
     modalHeading = modalAction + " Department";
-    form = <DepartmentForm action={action as AcademicAction}/>
+    form = <DepartmentForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
   }
 
   return (
