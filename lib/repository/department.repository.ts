@@ -1,0 +1,101 @@
+import { AvailabilityStatus } from "@prisma/client";
+import { Department, DepartmentProps } from "../types/department.type";
+import { DbConnection } from "../utils/db-connection.util";
+import { BaseRepository } from "./base.repository";
+
+export class DepartmentRepository extends BaseRepository<Department, DepartmentProps, number | string> {
+  protected selectedProps(): DepartmentProps {
+    return {
+      id: true,
+      name: true,
+      faculty: true,
+    }
+  };
+
+
+  async create(entity: Department): Promise<Department> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const department = await prisma.department.create({
+      data: {
+        name: entity.name,
+        facultyId: entity.facultId!,
+      },
+      select: this.selectedProps()
+    });
+
+    await db.close();
+
+    return department;
+  }
+
+
+  async update(entity: Department): Promise<Department> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const department = await prisma.department.update({
+      where: {
+        id: entity.id
+      },
+      data: {
+        name: entity.name,
+        facultyId: entity.facultId,
+        status: entity.status
+      }
+    });
+
+    await db.close();
+
+    return department;
+  }
+
+
+  async delete(id: number): Promise<void> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    await prisma.department.update({
+      where: {
+        id: id
+      },
+      data: {
+        status: AvailabilityStatus.UN_AVAILABLE
+      }
+    });
+
+    await db.close();
+  }
+
+
+  async find(value: number | string): Promise<Department | null> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+    let department: Department | null = null;
+
+    if (typeof value === "number") {
+      department = await prisma.department.findFirst({
+        where: {
+          id: value
+        },
+        select: this.selectedProps()
+      });
+    }
+    else if (typeof value === "string") {
+      department = await prisma.department.findFirst({
+        where: {
+          name: {
+            equals: value,
+            mode: "insensitive"
+          }
+        },
+        select: this.selectedProps()
+      });
+    }
+
+    await db.close();
+
+    return department;
+  }
+}
