@@ -28,11 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required")
-        .min(3, "Must be at least 3 characters")
-        .max(50, "Must be 50 characters or less")
-        .matches(/^[a-zA-Z ]+$/, "Only letters and white spaces are allowed")
-        .trim()
+  name: Yup.string().required().min(3).max(50).matches(/^[a-zA-Z ]+$/).trim()
 });
 const repo = new FacultyRepository();
 

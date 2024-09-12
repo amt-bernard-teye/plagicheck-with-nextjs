@@ -5,8 +5,11 @@ import { StatusCode } from "@/lib/enums/status-code";
 import { HttpException } from "@/lib/exception/http-exception";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { handleError } from "@/lib/utils/handle-error";
+import { checkApiAccess } from "@/lib/utils/check-api-access";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  checkApiAccess(req, res);
+
   if (req.method === "PUT") {
     updateFaculty(req, res);
     return;
@@ -25,15 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const repo = new FacultyRepository();
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required")
-    .min(3, "Must be at least 3 characters")
-    .max(50, "Must be 50 characters or less")
-    .matches(/^[a-zA-Z ]+$/, "Only letters and white spaces are allowed")
-    .trim(),
-  facultyId: Yup.string()
-    .required("Faculty is required")
-    .matches(/^[0-9]*$/, "Only numbers are allowed")
-    .trim()
+  name: Yup.string().required().min(3).max(50).matches(/^[a-zA-Z ]+$/).trim(),
+  facultyId: Yup.string().required().matches(/^[0-9]*$/).trim()
 });
 
 export async function updateFaculty(req: NextApiRequest, res: NextApiResponse) {
