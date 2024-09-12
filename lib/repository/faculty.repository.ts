@@ -111,10 +111,16 @@ export class FacultyRepository extends BaseRepository<Faculty, FacultyProp, numb
         name: {
           contains: value,
           mode: "insensitive"
-        },
-        
+        }
       },
-      select: this.selectedProps()
+      select: {
+        ...this.selectedProps(),
+        departments: {
+          where: {
+            status: AvailabilityStatus.AVAILABLE
+          }
+        }
+      }
     });
 
     await db.close();
