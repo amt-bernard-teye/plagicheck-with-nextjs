@@ -1,10 +1,13 @@
 .formControl {
   display: flex;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
   gap: 8px;
   border: 1px solid var(--gray-700);
-  padding: 10px 16px;
   border-radius: 8px;
   background-color: var(--white);
+  cursor: text;
 }
 
 .formControl:has(input:focus) {
@@ -12,6 +15,7 @@
 }
 
 .formControl input {
+  padding: 10px 0;
   outline: none;
   font: inherit;
   flex-grow: 1;
