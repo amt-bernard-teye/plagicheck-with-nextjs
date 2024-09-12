@@ -1,10 +1,12 @@
-import { Faculty, FacultyProp } from "./faculty.type";
+import { AvailabilityStatus } from "@prisma/client";
+import { Faculty } from "./faculty.type";
 
 export type Department = {
   id?: number;
   name: string;
   facultyId?: number;
   faculty?: Faculty;
+  status?: AvailabilityStatus
 }
 
 export type DepartmentProps = {
