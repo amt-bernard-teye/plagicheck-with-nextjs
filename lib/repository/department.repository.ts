@@ -20,7 +20,7 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
     const department = await prisma.department.create({
       data: {
         name: entity.name,
-        facultyId: entity.facultId!,
+        facultyId: entity.facultyId!,
       },
       select: this.selectedProps()
     });
@@ -41,9 +41,10 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
       },
       data: {
         name: entity.name,
-        facultyId: entity.facultId,
+        facultyId: entity.facultyId,
         status: entity.status
-      }
+      },
+      select: this.selectedProps()
     });
 
     await db.close();
@@ -78,8 +79,7 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
       department = await prisma.department.findFirst({
         where: {
           id: value
-        },
-        select: this.selectedProps()
+        }
       });
     }
     else if (typeof value === "string") {
@@ -89,8 +89,7 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
             equals: value,
             mode: "insensitive"
           }
-        },
-        select: this.selectedProps()
+        }
       });
     }
 
