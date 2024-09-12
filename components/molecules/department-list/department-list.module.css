@@ -1,7 +1,8 @@
 .list {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  align-items: center;
+  align-items: flex-start;
   width: auto;
 }
 
@@ -26,6 +27,12 @@
   cursor: pointer;
 }
 
+.emptyAction {
+  display: inline-block;
+  padding: 8px;
+  visibility: hidden;
+}
+
 .action:hover {
   border-color: var(--gray-800)
 }
@@ -36,10 +43,10 @@
 
 .row {
   position: absolute;
-  top: 23px;
-  right: 8px;
+  top: 0px;
+  right: -190px;
   background-color: var(--white);
-  min-width: 358px;
+  min-width: 330px;
   max-width: 400px;
   box-shadow: 0 4px 4px rgba(0,0,0,0.3);
   border-radius: 8px;
@@ -53,6 +60,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.875em;
 }
 
 .col:not(:last-child) {
@@ -97,7 +105,19 @@
 }
 
 @media (min-width: 768px) {
+  .list {
+    flex-direction: row;
+    align-items: center;
+  }
+
   .row {
     padding: 16px;
+    min-width: 400px;
+    right: 8px;
+    top: 23px;
+  }
+
+  .col {
+    font-size: 1em;
   }
 }

@@ -17,17 +17,28 @@ export default function DepartmentList({list, onEdit, onDelete, onSelectItem}: D
 
   let totalItems = list ? list.length : 0;
   let actionText = totalItems > 2 ? `+${totalItems}` : totalItems.toString();
+  let listItems: React.JSX.Element[] = [];
+
+  if (list) {
+    for (let item of list) {
+      if (listItems.length === 2) {
+        break;
+      }
+
+      listItems.push(
+        <span className={styles.listItem} key={item.id}>{item.name}</span>
+      );
+    }
+  }
 
   return (
     <div className={styles.list}>
-      {list?.map(item => (
-        <span className={styles.listItem} key={item.id}>{item.name}</span>
-      ))}
-      {totalItems !== 0 && (
+      {listItems}
+      {totalItems !== 0 ? (
         <button 
           className={styles.action} 
           onClick={() => setShowMainList(!showMainList)}>{ actionText }</button>
-      )}
+      ) : <span className={styles.emptyAction}>&nbps;</span>}
       <div className={styles.actualList}>
         {showMainList && (
           <div className={styles.row}>
