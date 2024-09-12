@@ -20,6 +20,7 @@ import { Faculty } from "@/lib/types/faculty.type";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { checkAuthUser } from "@/lib/utils/check-auth-user";
 import { useState } from "react";
+import { Department } from "@/lib/types/department.type";
 
 
 export async function getServerSideProps(context: any) {
@@ -61,6 +62,8 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
   const router = useRouter();
   const { alertDetails, handleAlertDetails } = useAlert();
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | undefined>();
+
 
   function toggleModal(tab: AcademicTab, action: AcademicAction) {
     const params = new URLSearchParams();
@@ -69,14 +72,20 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
     router.replace(`${router.pathname}?${params.toString()}`);
   }
 
+
   function handleSelectedFaculty(id: number) {
     const faculty = fetchedFaculties.find(fac => fac.id === id);
     setSelectedFaculty(faculty);
   }
 
-  function handleSelectedDepartment(id: number) {
 
+  function handleSelectedDepartment(departmentId: number, facultyId: number) {
+    const faculty = fetchedFaculties.find(fac => fac.id === facultyId);
+    const department = faculty?.departments?.find(dept => dept.id === departmentId);
+    setSelectedDepartment(department);
+    setSelectedFaculty(faculty);
   }
+
 
   let tab = router.query.tab as string || "";
   let action = router.query.action as string || "";
@@ -87,10 +96,22 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
 
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
-    form = <FacultyForm action={action as AcademicAction} onShowAlert={handleAlertDetails} selectedFaculty={selectedFaculty}/>
-  } else if (tab === AcademicTab.DEPARTMENT) {
+    form = (
+      <FacultyForm 
+        action={action as AcademicAction} 
+        onShowAlert={handleAlertDetails} 
+        selectedFaculty={selectedFaculty}/>
+    )
+  }
+  else if (tab === AcademicTab.DEPARTMENT) {
     modalHeading = modalAction + " Department";
-    form = <DepartmentForm action={action as AcademicAction} onShowAlert={handleAlertDetails}/>
+    form = (
+      <DepartmentForm 
+        action={action as AcademicAction} 
+        onShowAlert={handleAlertDetails} 
+        onCloseModal={() => router.replace(router.pathname)}
+        selectedItem={selectedDepartment}/>
+    );
   }
 
   return (
@@ -126,6 +147,7 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
                   <DepartmentList
                     list={faculty.departments}
                     onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
+                    onSelectItem={handleSelectedDepartment}
                     onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}/>
                 </td>
                 <td>
@@ -150,7 +172,11 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
         {tab && (
           <Modal 
             title={modalHeading} 
-            onToggle={() => router.replace(router.pathname)}>
+            onToggle={() => {
+              router.replace(router.pathname);
+              setSelectedDepartment(undefined);
+              setSelectedFaculty(undefined);
+            }}>
             { form }
           </Modal>
         )}

@@ -9,9 +9,10 @@ type DepartmentListProps = {
   list: Department[] | undefined;
   onEdit: () => void;
   onDelete: () => void;
+  onSelectItem: (departmentId: number, facultyId: number) => void;
 }
 
-export default function DepartmentList({onEdit, onDelete, list}: DepartmentListProps) {
+export default function DepartmentList({list, onEdit, onDelete, onSelectItem}: DepartmentListProps) {
   const [ showMainList, setShowMainList ] = useState(false);
 
   let totalItems = list ? list.length : 0;
@@ -38,6 +39,7 @@ export default function DepartmentList({onEdit, onDelete, list}: DepartmentListP
                     onClick={() => {
                       onEdit();
                       setShowMainList(!showMainList);
+                      onSelectItem(item.id!, item.facultyId!);
                     }}>
                     <PencilEdit />
                   </button>
@@ -45,6 +47,7 @@ export default function DepartmentList({onEdit, onDelete, list}: DepartmentListP
                     onClick={() => {
                       onDelete();
                       setShowMainList(!showMainList);
+                      onSelectItem(item.id!, item.facultyId!);
                     }}>
                     <TrashCan />
                   </button>

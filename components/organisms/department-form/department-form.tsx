@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -13,14 +13,17 @@ import { FetchForm } from "@/lib/enums/fetch-form";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Faculty } from "@/lib/types/faculty.type";
 import InputError from "@/components/atoms/input-error/input-error";
-import { createDepartment } from "@/lib/api/department";
+import { createDepartment, deleteDepartment, updateDepartment } from "@/lib/api/department";
+import { Department } from "@/lib/types/department.type";
 
 type DepartmentFormProps = {
   action: AcademicAction;
+  selectedItem: Department | undefined;
   onShowAlert: (message: string, variant: AlertVariant) => void;
+  onCloseModal: () => void;
 }
 
-export default function DepartmentForm({action, onShowAlert}: DepartmentFormProps) {
+export default function DepartmentForm({action, selectedItem, onShowAlert, onCloseModal}: DepartmentFormProps) {
   const [faculties, setFaculties] = useState<Faculty[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
@@ -60,6 +63,17 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
   }, [dataFetched]);
 
 
+  useEffect(() => {
+    if (faculties && selectedItem) {
+      formik.setValues({
+        name: selectedItem.name
+      });
+
+      const faculty = faculties.find(fac => fac.id === selectedItem.facultyId);
+      setSelectedFaculty(faculty);
+    }
+  }, [faculties, selectedItem]);
+
 
   async function handleSubmit(values: {name: string}) {
     if (!selectedFaculty) {
@@ -68,12 +82,23 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
     }
     
     setShowFacultyError(false);
+    let result: {message: string; data: Department};
 
     try {
-      const result = await createDepartment({
-        name: values.name,
-        facultyId: selectedFaculty.id!
-      });
+      if (selectedItem) {
+        result = await updateDepartment({
+          name: values.name,
+          facultyId: selectedFaculty.id!,
+          id: selectedItem.id!
+        });
+        onCloseModal();
+      }
+      else {
+        result = await createDepartment({
+          name: values.name,
+          facultyId: selectedFaculty.id!
+        });
+      }
       onShowAlert(result.message, AlertVariant.SUCCESS);
       formik.resetForm();
       setSelectedFaculty(undefined);
@@ -93,10 +118,23 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
   }
 
 
+  async function handleDeleteSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    try {
+      const result = await deleteDepartment(selectedItem?.id!);
+      onShowAlert(result.message, AlertVariant.SUCCESS);
+    }
+    catch(error: any) {
+      onShowAlert(error.message, AlertVariant.ERROR);
+    }
+  }
+
+
   let isEditOrAdd = action === AcademicAction.ADD || action === AcademicAction.EDIT;
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={isEditOrAdd ? formik.handleSubmit : handleDeleteSubmit}>
       {isEditOrAdd ? (
         <>
           <FormGroup className="mb-2">
@@ -124,7 +162,9 @@ export default function DepartmentForm({action, onShowAlert}: DepartmentFormProp
               <Button variant="secondary" type="button">Cancel</Button>
             </div>
             <div className="col-6 flex flex-column">
-              <Button variant="primary" type="submit">Add</Button>
+              <Button variant="primary" type="submit">
+                {selectedItem ? "Save" : "Add"}
+              </Button>
             </div>
           </div>
         </>
