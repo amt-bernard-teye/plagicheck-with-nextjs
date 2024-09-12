@@ -23,16 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const departmentRepo = new DepartmentRepository();
 const facultyRepo = new FacultyRepository();
 
-
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Department name is required")
-    .matches(/^[a-zA-Z ]*$/, "Only letters and white spaces are allowed")
-    .min(3, "Must be at least 3 characters")
-    .max(50, "Must be 30 characters or less"),
-  facultyId: Yup.string()
-    .required("Faculty Id is required")
-    .matches(/^[0-9]*$/, "Only numbers are allowed")
+  name: Yup.string().required().matches(/^[a-zA-Z ]*$/).min(3).max(50),
+  facultyId: Yup.string().required().matches(/^[0-9]*$/)
 });
 
 async function createDepartment(req: NextApiRequest, res: NextApiResponse) {
@@ -57,7 +50,7 @@ async function createDepartment(req: NextApiRequest, res: NextApiResponse) {
 
     const department = await departmentRepo.create({
       name: validatedData.name,
-      facultId: faculty?.id
+      facultyId: faculty?.id
     });
 
     return res.status(StatusCode.CREATED).json({
