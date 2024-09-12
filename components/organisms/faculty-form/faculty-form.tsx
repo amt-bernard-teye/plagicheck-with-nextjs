@@ -95,7 +95,9 @@ export default function FacultyForm({action, selectedFaculty, onShowAlert}: Facu
               <Button variant="secondary" type="button">Cancel</Button>
             </div>
             <div className="col-6 flex flex-column">
-              <Button variant="primary" type="submit">Add</Button>
+              <Button variant="primary" type="submit">
+                {selectedFaculty ? "Save" : "Add"}
+              </Button>
             </div>
           </div>
         </>

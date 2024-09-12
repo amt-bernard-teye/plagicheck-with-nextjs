@@ -53,6 +53,8 @@ async function updateDepartment(req: NextApiRequest, res: NextApiResponse) {
       throw new HttpException("Faculty doesn't exist", StatusCode.BAD_REQUEST);
     }
 
+    existingDepartment.name = validatedData.name;
+    existingDepartment.facultyId = existingFaculty.id;
     const updatedDepartment = await departmentRepo.update(existingDepartment);
 
     res.status(StatusCode.SUCCESS).json({
