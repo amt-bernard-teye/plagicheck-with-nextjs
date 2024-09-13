@@ -1,0 +1,42 @@
+.content {
+  margin-top: 63px;
+}
+
+.contentHeading {
+  margin-bottom: 46px;
+  font-size: 1.728125em;
+}
+
+.contentSubHeading {
+  font-size: 1.44em;
+  margin-bottom: 8px;
+}
+
+.list {
+  padding: 0;
+  margin-left: 20px;
+  margin-bottom: 40px;
+}
+
+.list li:not(:last-child) {
+  margin-bottom: 3px;
+}
+
+@media (min-width: 768px) {
+  .content {
+    width: 90%;
+  }
+}
+
+@media (min-width: 992px) {
+  .content {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content {
+    width: 791px;
+    margin-bottom: 85px;
+  }
+}

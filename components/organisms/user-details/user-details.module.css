@@ -1,0 +1,101 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.headerFilter {
+  position: absolute;
+  width: 200px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: 0 4px 4px rgba(0,0,0,0.3);
+  border: 1px solid var(--gray-1000);
+  top: 45px;
+  left: 0;
+}
+
+.headerFilter h5 {
+  margin-bottom: 16px;
+  font-size: 1em;
+}
+
+.headerList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerList label {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.headerList label:hover,
+.headerList label:has(input:checked) {
+  color: var(--sea-blue-100);
+  font-weight: 700;
+}
+
+.headerTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.headerTab {
+  font: inherit;
+  padding: 8px 12px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.headerTab:hover {
+  background-color: var(--gray-600);
+}
+
+.headerTabActive {
+  background-color: var(--gray-1000) !important;
+  border-bottom: 2px solid var(--sea-blue-100);
+  color: var(--sea-blue-100);
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .headerFilter {
+    left: -37px;
+    top: 50px;
+  }
+
+  .headerTabs {
+    margin: 0;
+  }
+
+  .headerTab {
+    padding: 8px 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .headerTabs,
+  .headerActions,
+  .headerList {
+    gap: 16px;
+  }
+}
+
