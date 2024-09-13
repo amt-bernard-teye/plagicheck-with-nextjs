@@ -1,0 +1,33 @@
+.paginator {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.paginatorLink {
+  color: var(--black-300);
+  text-decoration: none;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid var(--gray-700);
+}
+
+.paginatorLink:hover {
+  background-color: var(--gray-600);
+}
+
+.paginatorLink:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.paginatorLink:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+@media (min-width: 768px) {
+  .paginatorLink {
+    padding: 10px 16px;
+  }
+}

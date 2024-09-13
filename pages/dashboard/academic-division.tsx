@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
 import Dashboard from "@/components/layouts/dashboard/dashboard";
@@ -19,18 +20,29 @@ import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Faculty } from "@/lib/types/faculty.type";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { checkAuthUser } from "@/lib/utils/check-auth-user";
-import { useState } from "react";
 import { Department } from "@/lib/types/department.type";
+import Paginator from "@/components/molecules/paginator/paginator";
 
 
 export async function getServerSideProps(context: any) {
   checkAuthUser(context);
 
+  let page = +context.query["page"];
+  let query = context.query["q"] || "";
+
+  if (typeof page !== "number" || Number.isNaN(page)) {
+    page = 0;
+  }
+
+  if (page !== 0) {
+    page -= 1;
+  }
+
   try {
     const facultyRepo = new FacultyRepository();
     const [faculties, count] = await Promise.all([
-      facultyRepo.paginate("", 0),
-      facultyRepo.count('')
+      facultyRepo.paginate(query, page),
+      facultyRepo.count(query)
     ]);
 
     return {
@@ -94,6 +106,7 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
   let form: React.JSX.Element | undefined;
   let columnHeadings = ["Faculty name", "Departments", ""];
 
+
   if (tab === AcademicTab.FACULTY) {
     modalHeading = modalAction + " Faculty";
     form = (
@@ -122,6 +135,7 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/icon.svg" />
       </Head>
+
       <Dashboard>
         <PageHeader />
         <SubHeader
@@ -167,6 +181,8 @@ export default function AcademicDivision({count, data: fetchedFaculties}: Academ
               </tr>
             ))}
           </DataTable>
+
+          <Paginator totalRows={count}/>
         </div>
         
         {tab && (
