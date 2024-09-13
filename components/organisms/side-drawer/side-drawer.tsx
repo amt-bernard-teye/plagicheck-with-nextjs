@@ -114,7 +114,7 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
             className={`${styles.drawerLink} ${pathname === "/dashboard/archive" && styles.active}`}>
             <GoDatabase className="fs-24"/> Archive
           </Link>
-          <Link href="/dashboard/manage-users" 
+          <Link href="/dashboard/manage-users?tab=lecturer" 
             className={`${styles.drawerLink} ${pathname === "/dashboard/manage-users" && styles.active}`}>
             <UserGroup/> Manage Users
           </Link>
