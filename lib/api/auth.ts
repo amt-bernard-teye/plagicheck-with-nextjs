@@ -16,3 +16,21 @@ export async function login(values: {username: string, password: string}) {
 
   return await response.json();
 } 
+
+
+export async function logout() {
+  const response = await fetch("http://localhost:3000/api/auth/logout", {
+    method: "POST",
+    body: null,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (response.status !== StatusCode.SUCCESS) {
+    const result = await response.json();
+    throw new Error(result.message);
+  }
+
+  return await response.json();
+} 

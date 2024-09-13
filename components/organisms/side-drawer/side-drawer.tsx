@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState, forwardRef, useImperativeHandle } from "react";
+import { useState, forwardRef, useImperativeHandle, FormEvent } from "react";
 import { GoDatabase } from "react-icons/go";
 import { useRouter } from "next/router";
 
@@ -18,42 +18,55 @@ import Backdrop from "@/components/atoms/backdrop/backdrop";
 import UserProfile from "@/components/molecules/user-profile/user-profile";
 import Modal from "../modal/modal";
 import Button from "@/components/atoms/button/button";
+import { useAlert } from "@/lib/hooks/useAlert";
+import { logout } from "@/lib/api/auth";
+import { AlertVariant } from "@/lib/enums/alert-variant";
+import Alert from "@/components/molecules/alert/alert";
 
 export type SideDrawerHandle = {
   onToggleDrawer: () => void;
 }
 
 const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
+  const { alertDetails, handleAlertDetails } = useAlert();
+  const router = useRouter();
   const { pathname } = useRouter();
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+
   useImperativeHandle(ref, () => {
     return {
       onToggleDrawer() {
-        toggleDrawer();
+        setShowDrawer(prevState => !prevState);
       }
     }
   });
 
-  function toggleDropdown() {
-    setShowDropDown(prevState => !prevState);
+
+  async function handleLogout(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    try {
+      const result = await logout();
+      handleAlertDetails(result.message, AlertVariant.SUCCESS);
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    }
+    catch(error: any) {
+      handleAlertDetails(error.message, AlertVariant.ERROR);
+    }
   }
 
-  function toggleDrawer() {
-    setShowDrawer(prevState => !prevState);
-  }
-
-  function toggleLogoutModal() {
-    setShowLogoutModal(prevState => !prevState);
-  }
 
   let hasChecker = pathname.includes("checker");
 
   return (
     <>
-      {showDrawer && <Backdrop onClick={toggleDrawer} />}
+      {showDrawer && <Backdrop onClick={() => setShowDrawer(prevState => !prevState)} />}
       <aside className={`${styles.drawer} ${showDrawer && styles.drawerShow}`}>
         <div className="flex justify-content-center">
           <div className={styles.lgScreen}>
@@ -69,7 +82,7 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
             <GridBoxes/> Dashboard
           </Link>
           <div className={`${styles.dropdownContainer}  ${(showDropDown || hasChecker) && styles.dropdownShow}`}>
-            <button className={styles.drawerLink} onClick={toggleDropdown}>
+            <button className={styles.drawerLink} onClick={() => setShowDropDown(prevState => !prevState)}>
               <Checker/> Plagiarism Checker
             </button>
             <div className={styles.dropdown}>
@@ -110,26 +123,32 @@ const SideDrawer = forwardRef<SideDrawerHandle, {}>(({}, ref) => {
             <Gear/> Account Settings
           </Link>
 
-          <button className={`${styles.drawerLink} ${styles.marginTop}`} onClick={toggleLogoutModal}>
+          <button className={`${styles.drawerLink} ${styles.marginTop}`} onClick={() => setShowLogoutModal(prevState => !prevState)}>
             <BoxArrowLeft/> Logout
           </button>
         </div>
       </aside>
 
       {showLogoutModal && (
-        <Modal title="Logout" onToggle={toggleLogoutModal}>
-          <form>
+        <Modal title="Logout" onToggle={() => setShowLogoutModal(prevState => !prevState)}>
+          <form onSubmit={handleLogout}>
             <p className="line-height-24 mb-2">Are you sure you want to log out? By logging out, you will be securely logged out of the system and your session will be ended.</p>
             <div className="flex gap-19 h-44">
               <div className="col-6 flex flex-column">
-                <Button variant="secondary" type="button" onClick={toggleLogoutModal}>No</Button>
+                <Button variant="secondary" type="button" onClick={() => setShowLogoutModal(prevState => !prevState)}>No</Button>
               </div>
               <div className="col-6 flex flex-column">
-                <Button variant="danger" type="button">Yes</Button>
+                <Button variant="danger" type="submit">Yes</Button>
               </div>
             </div>
           </form>
         </Modal>
+      )}
+
+      {alertDetails.message && (
+        <Alert 
+          details={alertDetails}
+          onToggle={() => handleAlertDetails("", AlertVariant.SUCCESS)}/>
       )}
     </>
   );
