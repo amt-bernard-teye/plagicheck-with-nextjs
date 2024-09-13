@@ -1,0 +1,16 @@
+.goBack {
+  display: inline-block;
+}
+
+.goBackBtn {
+  display: flex;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  gap: 8px;
+  font: inherit;
+  align-items: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  font-weight: 600;
+}
