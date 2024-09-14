@@ -34,7 +34,7 @@ export default function BulkUpload({entity, onReturn}: BulkUploadProps) {
           <div style={{marginBottom: "85px"}}>
             <h3 className={styles.contentSubHeading}>Upload CSV File</h3>
             <p className="mb-2">Choose a CSV file from your computer to initiate the bulk upload process.</p>
-            <Button variant="primary">Download Template</Button>
+            <Button variant="primary">Browse</Button>
           </div>
         </div>
 
