@@ -5,4 +5,5 @@ export type UserInvitationDetails = {
   role: Role;
   email: string;
   password: string;
+  name: string;
 }
