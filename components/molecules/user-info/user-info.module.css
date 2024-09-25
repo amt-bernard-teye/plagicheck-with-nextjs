@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.container svg {
+  stroke: var(--gray-700);
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gray-700);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-600);
+}
