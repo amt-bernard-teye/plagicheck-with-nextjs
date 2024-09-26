@@ -2,8 +2,10 @@ import { AvailabilityStatus } from "@prisma/client";
 import { Department, DepartmentProps } from "../types/department.type";
 import { DbConnection } from "../utils/db-connection.util";
 import { BaseRepository } from "./base.repository";
+import { IMultipleFinder } from "../interfaces/multiple-finder";
 
-export class DepartmentRepository extends BaseRepository<Department, DepartmentProps, number | string> {
+export class DepartmentRepository extends BaseRepository<Department, DepartmentProps, number | string>
+  implements IMultipleFinder<Department> {
   protected selectedProps(): DepartmentProps {
     return {
       id: true,
@@ -96,5 +98,21 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
     await db.close();
 
     return department;
+  }
+
+
+  async findAll(): Promise<Department[]> {
+    const db = DbConnection.getInstance();
+    const prisma = await db.open();
+
+    const departments = await prisma.department.findMany({
+      where: {
+        status: AvailabilityStatus.AVAILABLE
+      }
+    });
+
+    await db.close();
+
+    return departments;
   }
 }
