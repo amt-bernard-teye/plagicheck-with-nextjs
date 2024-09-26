@@ -8,8 +8,8 @@ import FormControl from "@/components/molecules/form-control/form-control";
 import MultiSelect from "@/components/molecules/multi-select/multi-select";
 import InputError from "@/components/atoms/input-error/input-error";
 import { Department } from "@/lib/types/department.type";
-import { useEffect, useState } from "react";
-import { createLecturer } from "@/lib/api/lecturer";
+import { FormEvent, useEffect, useState } from "react";
+import { createLecturer, deleteLecturer } from "@/lib/api/lecturer";
 import { LecturerToCreate } from "@/lib/types/user.type";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Lecturer } from "@/lib/types/lecturer.type";
@@ -24,6 +24,7 @@ type LecturerFormProps = {
   onSetAlert: (message: string, status: AlertVariant) => void;
   onAddItem: (value: Lecturer) => void;
   onEditItem?: (lecturer: Lecturer) => void;
+  onResetLecturers?: (values: Lecturer[]) => void;
 }
 
 
@@ -36,7 +37,7 @@ type LecturerFormData = {
 
 
 export default function LecturerForm(
-  {action, departments, selectedItem, onSetAlert, onAddItem, onEditItem}: LecturerFormProps
+  {action, departments, selectedItem, onSetAlert, onAddItem, onEditItem, onResetLecturers}: LecturerFormProps
 ) {
   const [chosenDepartment, setChosenDepartment] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState<Department>();
@@ -111,6 +112,26 @@ export default function LecturerForm(
   }
 
 
+  async function handleDelete(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!selectedItem) {
+      return;
+    }
+
+    try {
+      const result = await deleteLecturer(selectedItem.user.id!);
+      onSetAlert(result.message, AlertVariant.SUCCESS);
+      if (onResetLecturers) {
+        onResetLecturers(result.data);
+      }
+    }
+    catch(error: any) {
+      onSetAlert(error.message, AlertVariant.ERROR);
+    }
+  }
+
+
   function handleSelectedDepartment(id: number) {
     const department = departments.find(item => item.id === id);
 
@@ -125,7 +146,7 @@ export default function LecturerForm(
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={action === "DELETE" ?  handleDelete : formik.handleSubmit}>
         {["ADD", "EDIT"].includes(action) ? (
           <>
             <FormGroup className="mb-2">

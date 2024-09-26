@@ -18,3 +18,21 @@ export async function createLecturer(value: LecturerToCreate) {
 
   return result;
 }
+
+
+export async function deleteLecturer(lecturerId: string) {
+  const response = await fetch(`http://localhost:3000/api/lecturers/${lecturerId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  const result = await response.json();
+
+  if (response.status !== StatusCode.SUCCESS) {
+    throw new Error(result.message);
+  }
+
+  return result;
+}

@@ -21,11 +21,12 @@ type UserDetailsProps = {
   onSetAlert: (message: string, status: AlertVariant) => void;
   onAddItem: (value: Lecturer) => void;
   onEditItem: (value: Lecturer) => void;
+  onResetLecturers: (values: Lecturer[]) => void;
 } & UserDetailsHeaderProps;
 
 
 export default function UserDetails(
-  {activeTab, onToggleModal, onSetActiveTab, onNavigateToBulk, lecturers, rows, departments, onSetAlert, onAddItem, onEditItem}: UserDetailsProps
+  {activeTab, onToggleModal, onSetActiveTab, onNavigateToBulk, lecturers, rows, departments, onSetAlert, onAddItem, onEditItem, onResetLecturers}: UserDetailsProps
 ) {
   const [showModal, setShowModal] = useState(false);
   const [userAction, setUserAction] = useState<"EDIT" | "DELETE">("EDIT");
@@ -45,12 +46,17 @@ export default function UserDetails(
 
   let lecturerColumnHeadings = ["Name", "Lecturer ID", "Email Address", "Phone Number", "Department", "Qualification", ""];
   let studentColumnHeadings = ["Name", "Lecturer ID", "Email Address", "Phone Number", "Department", ""];
+  let entity = UserTabs.LECTURER === activeTab ? "Lecturer" : "Student";
+  let action = userAction === "EDIT" ? "Edit" : "Delete";
+  let heading = `${action} ${entity}`;
+
   let form = activeTab === UserTabs.LECTURER ? (
       <LecturerForm 
         action={userAction}
         departments={departments}
         selectedItem={selectedLecturer}
         onSetAlert={onSetAlert}
+        onResetLecturers={onResetLecturers}
         onEditItem={handleEditItem}
         onAddItem={onAddItem} />
     ): (
@@ -106,7 +112,7 @@ export default function UserDetails(
 
       {showModal && (
         <Modal 
-          title={activeTab === UserTabs.LECTURER ? 'Edit Lecturer' : 'Edit Student'} 
+          title={heading} 
           onToggle={() => {
             setShowModal(showModal => !showModal);
           }}>

@@ -103,6 +103,11 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
     updatedLecturers.splice(lecturerIndex, 1, lecturer);
     setLecturers(updatedLecturers);
   }
+
+
+  function resetLecturersAsDelete(lecturers: Lecturer[]) {
+    setLecturers(lecturers);
+  }
   
   
   let browserTab = router.query["tab"] as string || "";
@@ -137,6 +142,7 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
             onSetAlert={handleAlertDetails}
             onAddItem={handleAddLecturers}
             onEditItem={handleEditLecturers}
+            onResetLecturers={resetLecturersAsDelete}
             onNavigateToBulk={toggleBulkPane}/>
         ) : (
           <BulkUpload

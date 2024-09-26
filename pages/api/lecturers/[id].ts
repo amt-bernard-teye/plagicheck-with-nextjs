@@ -70,9 +70,13 @@ async function deleteLecturer(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     await lecturerRepo.delete(lecturerId);
+    const firstPage = 0;
+    const query = "";
+    let lecturers = await lecturerRepo.paginate(query, firstPage);
 
     res.status(StatusCode.SUCCESS).json({
-      message: "Lecturer deleted successfully"
+      message: "Lecturer deleted successfully",
+      data: lecturers
     });
   }
   catch(error: any) {
