@@ -21,3 +21,16 @@ export type UserProp = {
   phoneNumber: boolean;
   status: boolean;
 }
+
+
+export type UserToCreate = {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  departmentId: string;
+}
+
+
+export type LecturerToCreate = {
+  qualification: string;
+} & UserToCreate;
