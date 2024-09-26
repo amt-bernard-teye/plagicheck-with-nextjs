@@ -120,7 +120,7 @@ export class LecturerRepository extends BaseRepository<Lecturer, LecturerProp, n
     };
   }
 
-  private async findByUserId(userId: string) {
+  public async findByUserId(userId: string) {
     const db = DbConnection.getInstance();
     const prisma = await db.open();
 

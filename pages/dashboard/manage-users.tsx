@@ -65,6 +65,7 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
   const [showBulkPane, setShowBulkPane] = useState(false);
   const [lecturers, setLecturers] = useState<Lecturer[]>(data);
   
+
   function setActiveTab(tab: UserTabs) {
     const params = new URLSearchParams();
     params.set("tab", tab);
@@ -88,6 +89,19 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
     }
 
     setLecturers(newLecturers);
+  }
+
+
+  function handleEditLecturers(lecturer: Lecturer) {
+    const lecturerIndex = lecturers.findIndex(lect => lect.user.id === lecturer.user.id);
+
+    if (lecturerIndex === -1) {
+      return;
+    }
+
+    const updatedLecturers = [...lecturers];
+    updatedLecturers.splice(lecturerIndex, 1, lecturer);
+    setLecturers(updatedLecturers);
   }
   
   
@@ -122,6 +136,7 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
             onSetActiveTab={setActiveTab}
             onSetAlert={handleAlertDetails}
             onAddItem={handleAddLecturers}
+            onEditItem={handleEditLecturers}
             onNavigateToBulk={toggleBulkPane}/>
         ) : (
           <BulkUpload

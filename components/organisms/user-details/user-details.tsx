@@ -20,11 +20,12 @@ type UserDetailsProps = {
   departments: Department[];
   onSetAlert: (message: string, status: AlertVariant) => void;
   onAddItem: (value: Lecturer) => void;
+  onEditItem: (value: Lecturer) => void;
 } & UserDetailsHeaderProps;
 
 
 export default function UserDetails(
-  {activeTab, onToggleModal, onSetActiveTab, onNavigateToBulk, lecturers, rows, departments, onSetAlert, onAddItem}: UserDetailsProps
+  {activeTab, onToggleModal, onSetActiveTab, onNavigateToBulk, lecturers, rows, departments, onSetAlert, onAddItem, onEditItem}: UserDetailsProps
 ) {
   const [showModal, setShowModal] = useState(false);
   const [userAction, setUserAction] = useState<"EDIT" | "DELETE">("EDIT");
@@ -36,15 +37,21 @@ export default function UserDetails(
     setShowModal(prevState => !prevState);
   }
 
+  function handleEditItem(value: Lecturer) {
+    onEditItem(value);
+    setShowModal(false);
+  }
+
 
   let lecturerColumnHeadings = ["Name", "Lecturer ID", "Email Address", "Phone Number", "Department", "Qualification", ""];
   let studentColumnHeadings = ["Name", "Lecturer ID", "Email Address", "Phone Number", "Department", ""];
   let form = activeTab === UserTabs.LECTURER ? (
       <LecturerForm 
-        action={userAction} 
+        action={userAction}
         departments={departments}
         selectedItem={selectedLecturer}
         onSetAlert={onSetAlert}
+        onEditItem={handleEditItem}
         onAddItem={onAddItem} />
     ): (
       <StudentForm />

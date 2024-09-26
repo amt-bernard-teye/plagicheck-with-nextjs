@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 import { hash } from "bcryptjs";
 import * as PasswordGenerator from "generate-password";
 
@@ -10,7 +9,7 @@ import { Role } from "@prisma/client";
 import { StatusCode } from "@/lib/enums/status-code";
 import { UserInvitationMailer } from "@/lib/mailer/user-invitation.mailer";
 import { getQueryPageForm } from "@/lib/utils/get-query-page-form";
-import { Lecturer } from "@/lib/types/lecturer.type";
+import { lecturerValidationSchema } from "@/lib/utils/validators/lecturer.validator";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
@@ -31,19 +30,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const lecturerRepo = new LecturerRepository();
 const departmentRepo = new DepartmentRepository();
 
-const validationSchema = Yup.object({
-  name: Yup.string().required().matches(/^[a-zA-Z ]*$/),
-  email: Yup.string().required().email(),
-  departmentId: Yup.number().required(),
-  qualification: Yup.string().required().matches(/^[a-zA-Z ]*$/),
-  phoneNumber: Yup.string().required().matches(/^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/)
-});
+
 
 async function createLecturer(req: NextApiRequest, res: NextApiResponse) {
   const data = req.body;
 
   try {
-    const validatedData = await validationSchema.validate(data);
+    const validatedData = await lecturerValidationSchema.validate(data);
     const department = await departmentRepo.find(validatedData.departmentId);
 
     if (!department) {

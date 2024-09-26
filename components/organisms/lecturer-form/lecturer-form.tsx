@@ -13,6 +13,8 @@ import { createLecturer } from "@/lib/api/lecturer";
 import { LecturerToCreate } from "@/lib/types/user.type";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import { Lecturer } from "@/lib/types/lecturer.type";
+import makeHttpRequest, { HttpMethods } from "@/lib/api/request-sender";
+import { StatusCode } from "@/lib/enums/status-code";
 
 
 type LecturerFormProps = {
@@ -21,6 +23,7 @@ type LecturerFormProps = {
   selectedItem?: Lecturer;
   onSetAlert: (message: string, status: AlertVariant) => void;
   onAddItem: (value: Lecturer) => void;
+  onEditItem?: (lecturer: Lecturer) => void;
 }
 
 
@@ -32,15 +35,17 @@ type LecturerFormData = {
 }
 
 
-export default function LecturerForm({action, departments, selectedItem, onSetAlert, onAddItem}: LecturerFormProps) {
+export default function LecturerForm(
+  {action, departments, selectedItem, onSetAlert, onAddItem, onEditItem}: LecturerFormProps
+) {
   const [chosenDepartment, setChosenDepartment] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState<Department>();
   const formik = useFormik({
     initialValues: {
-      name: selectedItem ? selectedItem.user.name : "",
-      email: selectedItem ? selectedItem.user.email : "",
-      phoneNumber: selectedItem ? selectedItem.user.phoneNumber : "",
-      qualification: selectedItem ? selectedItem.qualification : "",
+      name: "",
+      email: "",
+      phoneNumber: "",
+      qualification: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required").matches(/^[a-zA-Z ]*$/, "Only letters and whitespaces are allowed"),
@@ -54,7 +59,13 @@ export default function LecturerForm({action, departments, selectedItem, onSetAl
   
   useEffect(() => {
     if (selectedItem) {
-      setSelectedDepartment(selectedItem.department)
+      setSelectedDepartment(selectedItem.department);
+      formik.setValues({
+        email: selectedItem.user.email,
+        name: selectedItem.user.name,
+        phoneNumber: selectedItem.user.phoneNumber,
+        qualification: selectedItem.qualification,
+      });
     }
   }, [selectedItem]);
 
@@ -73,11 +84,26 @@ export default function LecturerForm({action, departments, selectedItem, onSetAl
     }
 
     try {
-      const result = await createLecturer(lecturerToCreate);
-      onSetAlert(result.message, AlertVariant.SUCCESS);
-      formik.resetForm();
+      if (!selectedItem) {
+        const result = await createLecturer(lecturerToCreate);
+        onSetAlert(result.message, AlertVariant.SUCCESS);
+        onAddItem(result.data);
+      } 
+      else {
+        const result = await makeHttpRequest<LecturerToCreate>({
+          method: HttpMethods.PUT,
+          path: `lecturers/${selectedItem.user.id}`,
+          status: StatusCode.SUCCESS
+        }, lecturerToCreate);
+        
+        onSetAlert(result.message, AlertVariant.SUCCESS);
+        if (onEditItem) {
+          onEditItem(result.data);
+        }
+      }
+
       setSelectedDepartment(undefined);
-      onAddItem(result.data);
+      formik.resetForm();
     }
     catch(error: any) {
       onSetAlert(error.message, AlertVariant.ERROR);
@@ -162,8 +188,6 @@ export default function LecturerForm({action, departments, selectedItem, onSetAl
           </>
         )}
       </form>
-
-      
     </>
   )
 }
