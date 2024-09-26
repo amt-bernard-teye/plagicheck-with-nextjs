@@ -12,3 +12,25 @@ export function getQueryPageForm(req: NextApiRequest) {
 
   return {query, page, form};
 }
+
+
+type GetQueryAndPageValues = {
+  page: string;
+  q: string;
+}
+
+
+export function getQueryAndPage(value: GetQueryAndPageValues) {
+  let page = +value.page;
+  let query = value.q || "";
+
+  if (typeof page !== "number" || Number.isNaN(page)) {
+    page = 0;
+  }
+
+  if (page !== 0) {
+    page -= 1;
+  }
+
+  return {page, query};
+}
