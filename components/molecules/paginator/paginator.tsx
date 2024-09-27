@@ -19,6 +19,10 @@ export default function Paginator({totalRows}: PaginatorProps) {
   let links: React.JSX.Element[] = [];
   let rowPerPage = 9;
 
+  if (totalRows < 10) {
+    return null;
+  }
+
   if (typeof currentPage !== "number" || Number.isNaN(currentPage)) {
     currentPage = 0;
   }
