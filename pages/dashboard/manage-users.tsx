@@ -19,6 +19,8 @@ import { Department } from "@/lib/types/department.type";
 import Alert from "@/components/molecules/alert/alert";
 import { useAlert } from "@/lib/hooks/useAlert";
 import { AlertVariant } from "@/lib/enums/alert-variant";
+import { StudentRepository } from "@/lib/repository/student.repository";
+import { Student } from "@/lib/types/student.type";
 
 
 export async function getServerSideProps(context: any) {
@@ -27,19 +29,24 @@ export async function getServerSideProps(context: any) {
   const values = getQueryAndPage(context.query);
   const lecturerRepo = new LecturerRepository();
   const departmentRepo = new DepartmentRepository();
+  const studentRepo = new StudentRepository();
 
   try {
-    const [lecturers, count, departments] = await Promise.all([
+    const [lecturers, lecturerRowCount, departments, students, studentRowCount] = await Promise.all([
       lecturerRepo.paginate(values.query, values.page),
       lecturerRepo.count(values.query),
-      departmentRepo.findAll()
+      departmentRepo.findAll(),
+      studentRepo.paginate(values.query, values.page),
+      studentRepo.count(values.query)
     ]);
 
     return {
       props: {
         lecturers,
+        lecturerRowCount,
         departments,
-        count,
+        students,
+        studentRowCount
       }
     }
   }
@@ -54,16 +61,21 @@ export async function getServerSideProps(context: any) {
 type ManageUsersProp = {
   lecturers: Lecturer[];
   departments: Department[];
-  count: number;
+  lecturerRowCount: number;
+  students: Student[];
+  studentRowCount: number;
 }
 
 
-export default function ManageUsers({lecturers: data, count, departments}: ManageUsersProp) {
+export default function ManageUsers(
+  {lecturers: lecturersData, lecturerRowCount, departments, students: studentsData, studentRowCount}: ManageUsersProp
+) {
   const router = useRouter();
   const { alertDetails, handleAlertDetails } = useAlert();
   const [showModal, setShowModal] = useState(false);
   const [showBulkPane, setShowBulkPane] = useState(false);
-  const [lecturers, setLecturers] = useState<Lecturer[]>(data);
+  const [lecturers, setLecturers] = useState<Lecturer[]>(lecturersData);
+  const [students, setStudents] = useState<Student[]>(studentsData);
   
 
   function setActiveTab(tab: UserTabs) {
@@ -78,7 +90,7 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
   }
 
 
-  function handleAddLecturers(value: Lecturer) {
+  function handleAddLecturer(value: Lecturer) {
     const newLecturers = [
       value,
       ...lecturers
@@ -88,11 +100,11 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
       newLecturers.pop();
     }
 
-    setLecturers(newLecturers);
+    setStudents(newLecturers);
   }
 
 
-  function handleEditLecturers(lecturer: Lecturer) {
+  function handleEditLecturer(lecturer: Lecturer) {
     const lecturerIndex = lecturers.findIndex(lect => lect.user.id === lecturer.user.id);
 
     if (lecturerIndex === -1) {
@@ -105,8 +117,35 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
   }
 
 
-  function resetLecturersAsDelete(lecturers: Lecturer[]) {
-    setLecturers(lecturers);
+  function handleAddStudent(value: Student) {
+    let newStudents = [
+      value,
+      ...students
+    ];
+
+    if (students.length > 9) {
+      students.pop();
+    }
+
+    setStudents(newStudents);
+  }
+
+
+  function handleEditStudent(value: Student) {
+    const studentIndex = students.findIndex(stud => stud.user.id === value.user.id);
+
+    if (studentIndex === -1) {
+      return;
+    }
+
+    const updatedStudents = [...students];
+    updatedStudents.splice(studentIndex, 1, value);
+    setStudents(updatedStudents);
+  }
+
+
+  function resetLecturersAfterSingleDelete(lecturers: Lecturer[]) {
+    setStudents(lecturers);
   }
   
   
@@ -118,8 +157,13 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
         action="ADD" 
         departments={departments}
         onSetAlert={handleAlertDetails}
-        onAddItem={handleAddLecturers} />
-    ) : <StudentForm />;
+        onAddItem={handleAddLecturer} />
+    ) : (
+      <StudentForm 
+        departments={departments}
+        onAddItem={handleAddStudent}
+        onSetAlert={handleAlertDetails}/>
+    );
 
   return (
     <>
@@ -134,15 +178,19 @@ export default function ManageUsers({lecturers: data, count, departments}: Manag
         {!showBulkPane ? (
           <UserDetails 
             lecturers={lecturers}
-            rows={count}
+            lecturerRowCount={lecturerRowCount}
             departments={departments}
+            students={students}
+            studentRowCount={studentRowCount}
             activeTab={activeTab as UserTabs}
             onToggleModal={() => setShowModal(!showModal)}
             onSetActiveTab={setActiveTab}
             onSetAlert={handleAlertDetails}
-            onAddItem={handleAddLecturers}
-            onEditItem={handleEditLecturers}
-            onResetLecturers={resetLecturersAsDelete}
+            onAddLecturer={handleAddLecturer}
+            onEditLecturer={handleEditLecturer}
+            onResetLecturers={resetLecturersAfterSingleDelete}
+            onAddStudent={handleAddStudent}
+            onEditStudent={handleEditStudent}
             onNavigateToBulk={toggleBulkPane}/>
         ) : (
           <BulkUpload

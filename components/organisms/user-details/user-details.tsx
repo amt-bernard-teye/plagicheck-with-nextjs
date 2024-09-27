@@ -12,25 +12,36 @@ import UserInfo from "@/components/molecules/user-info/user-info";
 import { Department } from "@/lib/types/department.type";
 import { AlertVariant } from "@/lib/enums/alert-variant";
 import Paginator from "@/components/molecules/paginator/paginator";
+import { Student } from "@/lib/types/student.type";
 
 
 type UserDetailsProps = {
   lecturers: Lecturer[];
-  rows: number;
+  lecturerRowCount: number;
   departments: Department[];
+  students: Student[];
+  studentRowCount: number;
   onSetAlert: (message: string, status: AlertVariant) => void;
-  onAddItem: (value: Lecturer) => void;
-  onEditItem: (value: Lecturer) => void;
+  onAddLecturer: (value: Lecturer) => void;
+  onEditLecturer: (value: Lecturer) => void;
   onResetLecturers: (values: Lecturer[]) => void;
+  onAddStudent: (value: Student) => void;
+  onEditStudent: (value: Student) => void;
 } & UserDetailsHeaderProps;
 
 
 export default function UserDetails(
-  {activeTab, onToggleModal, onSetActiveTab, onNavigateToBulk, lecturers, rows, departments, onSetAlert, onAddItem, onEditItem, onResetLecturers}: UserDetailsProps
+  {
+    activeTab, departments, 
+    lecturers, lecturerRowCount, onAddLecturer, onEditLecturer,
+    students, studentRowCount, onAddStudent, onEditStudent,
+    onSetAlert, onResetLecturers, onToggleModal, onSetActiveTab, onNavigateToBulk,
+  }: UserDetailsProps
 ) {
   const [showModal, setShowModal] = useState(false);
   const [userAction, setUserAction] = useState<"EDIT" | "DELETE">("EDIT");
   const [selectedLecturer, setSelectedLecturer] = useState<Lecturer>();
+  const [selectedStudent, setSelectedStudent] = useState<Student>();
 
 
   function handleUserAction(action: "EDIT" | "DELETE") {
@@ -39,7 +50,7 @@ export default function UserDetails(
   }
 
   function handleEditItem(value: Lecturer) {
-    onEditItem(value);
+    onEditLecturer(value);
     setShowModal(false);
   }
 
@@ -58,9 +69,15 @@ export default function UserDetails(
         onSetAlert={onSetAlert}
         onResetLecturers={onResetLecturers}
         onEditItem={handleEditItem}
-        onAddItem={onAddItem} />
+        onAddItem={onAddLecturer} 
+      />
     ): (
-      <StudentForm />
+      <StudentForm
+        departments={departments}
+        selectedItem={selectedStudent}
+        onAddItem={onAddStudent}
+        onSetAlert={onSetAlert} 
+      />
     );
 
 
@@ -101,12 +118,37 @@ export default function UserDetails(
                 </tr>
               ))}
             </DataTable>
-            <Paginator totalRows={rows} />
+            <Paginator totalRows={lecturerRowCount} />
           </>
         ) : (
-          <DataTable columnHeadings={studentColumnHeadings}>
-            <p>Testing</p>
-          </DataTable>
+          <>
+            <DataTable columnHeadings={studentColumnHeadings}>
+              {students.map(student => (
+                <tr key={student.user.id}>
+                  <td>
+                    <UserInfo name={student.user.name} image={student.user.image}/>
+                  </td>
+                  <td>{student.user.id}</td>
+                  <td>{student.user.email}</td>
+                  <td>{student.user.phoneNumber}</td>
+                  <td>{student.department.name}</td>
+                  <td>
+                    <DataTableActions>
+                      <button onClick={() => {
+                        handleUserAction("EDIT");
+                        setSelectedStudent(student);
+                      }}>Edit Lecturer</button>
+                      <button onClick={() => {
+                        handleUserAction("DELETE");
+                        setSelectedStudent(student);
+                      }}>Delete Lecturer</button>
+                    </DataTableActions>
+                  </td>
+                </tr>
+              ))}
+            </DataTable>
+            <Paginator totalRows={studentRowCount} />
+          </>
         )}
       </div>
 
