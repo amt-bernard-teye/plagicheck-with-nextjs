@@ -145,7 +145,12 @@ export default function ManageUsers(
 
 
   function resetLecturersAfterSingleDelete(lecturers: Lecturer[]) {
-    setStudents(lecturers);
+    setLecturers(lecturers);
+  }
+
+
+  function resetStudentsAfterSingleDelete(students: Student[]) {
+    setStudents(students);
   }
   
   
@@ -191,6 +196,7 @@ export default function ManageUsers(
             onResetLecturers={resetLecturersAfterSingleDelete}
             onAddStudent={handleAddStudent}
             onEditStudent={handleEditStudent}
+            onResetStudents={resetStudentsAfterSingleDelete}
             onNavigateToBulk={toggleBulkPane}/>
         ) : (
           <BulkUpload

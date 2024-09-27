@@ -27,15 +27,16 @@ type UserDetailsProps = {
   onResetLecturers: (values: Lecturer[]) => void;
   onAddStudent: (value: Student) => void;
   onEditStudent: (value: Student) => void;
+  onResetStudents: (values: Student[]) => void;
 } & UserDetailsHeaderProps;
 
 
 export default function UserDetails(
   {
     activeTab, departments, 
-    lecturers, lecturerRowCount, onAddLecturer, onEditLecturer,
-    students, studentRowCount, onAddStudent, onEditStudent,
-    onSetAlert, onResetLecturers, onToggleModal, onSetActiveTab, onNavigateToBulk,
+    lecturers, lecturerRowCount, onAddLecturer, onEditLecturer, onResetLecturers,
+    students, studentRowCount, onAddStudent, onEditStudent, onResetStudents,
+    onSetAlert, onToggleModal, onSetActiveTab, onNavigateToBulk,
   }: UserDetailsProps
 ) {
   const [showModal, setShowModal] = useState(false);
@@ -49,8 +50,13 @@ export default function UserDetails(
     setShowModal(prevState => !prevState);
   }
 
-  function handleEditItem(value: Lecturer) {
+  function handleEditLecturer(value: Lecturer) {
     onEditLecturer(value);
+    setShowModal(false);
+  }
+
+  function handleEditStudent(value: Student) {
+    onEditStudent(value);
     setShowModal(false);
   }
 
@@ -68,7 +74,7 @@ export default function UserDetails(
         selectedItem={selectedLecturer}
         onSetAlert={onSetAlert}
         onResetLecturers={onResetLecturers}
-        onEditItem={handleEditItem}
+        onEditItem={handleEditLecturer}
         onAddItem={onAddLecturer} 
       />
     ): (
@@ -76,7 +82,11 @@ export default function UserDetails(
         departments={departments}
         selectedItem={selectedStudent}
         onAddItem={onAddStudent}
-        onSetAlert={onSetAlert} 
+        onSetAlert={onSetAlert}
+        isDeleteAction={userAction === "DELETE"}
+        onResetList={onResetStudents}
+        onToggleModal={() => setShowModal(false)}
+        onEditItem={handleEditStudent}
       />
     );
 

@@ -10,6 +10,7 @@ import { StatusCode } from "@/lib/enums/status-code";
 import { UserInvitationMailer } from "@/lib/mailer/user-invitation.mailer";
 import { getQueryPageForm } from "@/lib/utils/get-query-page-form";
 import { studentValidationSchema } from "@/lib/utils/validators/student.validator";
+import { UserRepository } from "@/lib/repository/user.repository";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
@@ -29,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 const studentRepo = new StudentRepository();
 const departmentRepo = new DepartmentRepository();
+const userRepo = new UserRepository();
 
 async function createStudent(req: NextApiRequest, res: NextApiResponse) {
   const data = req.body;
@@ -36,6 +38,12 @@ async function createStudent(req: NextApiRequest, res: NextApiResponse) {
   try {
     const validatedData = await studentValidationSchema.validate(data);
     const department = await departmentRepo.find(validatedData.departmentId);
+
+    const existingUser = await userRepo.find(validatedData.email);
+
+    if (existingUser) {
+      throw new Error("Email already exist, please try again with another one");
+    }
 
     if (!department) {
       throw new Error("Selected department not found");
