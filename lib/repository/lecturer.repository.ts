@@ -169,7 +169,27 @@ export class LecturerRepository extends BaseRepository<Lecturer, LecturerProp, n
       },
       where: {
         user: {
-          status: AvailabilityStatus.AVAILABLE
+          status: AvailabilityStatus.AVAILABLE,
+          OR: [
+            {
+              name: {
+                contains: value,
+                mode: "insensitive"
+              },
+            },
+            {
+              email: {
+                contains: value,
+                mode: "insensitive"
+              },
+            },
+            {
+              id: {
+                contains: value,
+                mode: "insensitive"
+              },
+            }
+          ]
         }
       },
       select: {
@@ -206,7 +226,27 @@ export class LecturerRepository extends BaseRepository<Lecturer, LecturerProp, n
     const rows = await prisma.user.count({
       where: {
         status: AvailabilityStatus.AVAILABLE,
-        role: Role.LECTURER
+        role: Role.LECTURER,
+        OR: [
+          {
+            name: {
+              contains: value,
+              mode: "insensitive"
+            },
+          },
+          {
+            email: {
+              contains: value,
+              mode: "insensitive"
+            },
+          },
+          {
+            id: {
+              contains: value,
+              mode: "insensitive"
+            },
+          }
+        ]
       }
     });
 

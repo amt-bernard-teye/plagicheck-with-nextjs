@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Dashboard from "@/components/layouts/dashboard/dashboard";
 import PageHeader from "@/components/organisms/page-header/page-header";
@@ -76,6 +76,11 @@ export default function ManageUsers(
   const [showBulkPane, setShowBulkPane] = useState(false);
   const [lecturers, setLecturers] = useState<Lecturer[]>(lecturersData);
   const [students, setStudents] = useState<Student[]>(studentsData);
+
+  useEffect(() => {
+    setLecturers(lecturersData);
+    setStudents(studentsData);
+  }, [lecturersData, studentsData]);
   
 
   function setActiveTab(tab: UserTabs) {
@@ -152,6 +157,19 @@ export default function ManageUsers(
   function resetStudentsAfterSingleDelete(students: Student[]) {
     setStudents(students);
   }
+
+
+  function handleSearch(value: string) {
+    const currentTab = router.query.tab as string;
+    const params = new URLSearchParams();
+    params.set("tab", currentTab);
+    
+    if (value) {
+      params.set("q", value);
+    }
+
+    router.replace(`${router.pathname}?${params.toString()}`);
+  }
   
   
   let browserTab = router.query["tab"] as string || "";
@@ -179,7 +197,7 @@ export default function ManageUsers(
         <link rel="icon" href="/icon.svg" />
       </Head>
       <Dashboard>
-        <PageHeader />
+        <PageHeader onSearch={handleSearch} />
         {!showBulkPane ? (
           <UserDetails 
             lecturers={lecturers}

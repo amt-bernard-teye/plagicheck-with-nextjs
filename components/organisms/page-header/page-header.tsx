@@ -8,20 +8,30 @@ import Search from "@/components/atoms/icons/search";
 import UserProfile from "@/components/molecules/user-profile/user-profile";
 
 
-export default function PageHeader() {
-  const router = useRouter();
-  const searchTerm = router.query["q"] || "";
+type PageHeaderProps = {
+  onSearch?: (value: string) => void;
+}
 
+
+export default function PageHeader({onSearch}: PageHeaderProps) {
+  const router = useRouter();
+  const searchTerm = router.query["q"] as string || "";
 
   const handleSearch = useDebouncedCallback((event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value || "";
-    const params = new URLSearchParams();
-    params.set("q", value);
 
-    if (value) {
-      router.replace(`${router.pathname}?${params.toString()}`);
-    } else {
-      router.replace(`${router.pathname}`);
+    if (onSearch) {
+      onSearch(value);
+    }
+    else {
+      const params = new URLSearchParams();
+      params.set("q", value);
+
+      if (value) {
+        router.replace(`${router.pathname}?${params.toString()}`);
+      } else {
+        router.replace(`${router.pathname}`);
+      }
     }
   }, 650);
 
@@ -36,6 +46,7 @@ export default function PageHeader() {
     <header className={styles.header}>
       <div className={styles.search}>
         <FormControl 
+          type="search"
           placeholder="Search anything here"
           onChange={handleSearch}
           defaultValue={searchTerm}

@@ -8,42 +8,6 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  position: relative;
-}
-
-.headerFilter {
-  position: absolute;
-  width: 200px;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: var(--white);
-  box-shadow: 0 4px 4px rgba(0,0,0,0.3);
-  border: 1px solid var(--gray-1000);
-  top: 45px;
-  left: 0;
-}
-
-.headerFilter h5 {
-  margin-bottom: 16px;
-  font-size: 1em;
-}
-
-.headerList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerList label {
-  display: flex;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.headerList label:hover,
-.headerList label:has(input:checked) {
-  color: var(--sea-blue-100);
-  font-weight: 700;
 }
 
 .headerTabs {

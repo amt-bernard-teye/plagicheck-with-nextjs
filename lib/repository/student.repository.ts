@@ -163,8 +163,28 @@ export class StudentRepository extends BaseRepository<Student, StudentProp, numb
       },
       where: {
         user: {
-          status: AvailabilityStatus.AVAILABLE
-        }
+          status: AvailabilityStatus.AVAILABLE,
+          OR: [
+            {
+              name: {
+                contains: value,
+                mode: "insensitive"
+              },
+            },
+            {
+              email: {
+                contains: value,
+                mode: "insensitive"
+              },
+            },
+            {
+              id: {
+                contains: value,
+                mode: "insensitive"
+              },
+            }
+          ]
+        },
       },
       select: {
         department: {
@@ -200,6 +220,26 @@ export class StudentRepository extends BaseRepository<Student, StudentProp, numb
       where: {
         status: AvailabilityStatus.AVAILABLE,
         role: Role.STUDENT,
+        OR: [
+          {
+            name: {
+              contains: value,
+              mode: "insensitive"
+            },
+          },
+          {
+            email: {
+              contains: value,
+              mode: "insensitive"
+            },
+          },
+          {
+            id: {
+              contains: value,
+              mode: "insensitive"
+            },
+          }
+        ]
       }
     });
 
