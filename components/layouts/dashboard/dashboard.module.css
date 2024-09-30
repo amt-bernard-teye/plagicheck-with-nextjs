@@ -29,9 +29,11 @@
 
   .main {
     display: flex;
+    overflow: hidden;
   }
 
   .content {
     flex-basis: calc(100% - 270px);
+    overflow-y: auto;
   }
 }
