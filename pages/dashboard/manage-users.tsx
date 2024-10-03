@@ -77,6 +77,7 @@ export default function ManageUsers(
   const [lecturers, setLecturers] = useState<Lecturer[]>(lecturersData);
   const [students, setStudents] = useState<Student[]>(studentsData);
 
+  
   useEffect(() => {
     setLecturers(lecturersData);
     setStudents(studentsData);
@@ -219,6 +220,7 @@ export default function ManageUsers(
         ) : (
           <BulkUpload
             entity={activeTab === UserTabs.LECTURER ? 'Lecturers' : 'Students'}
+            onSetAlert={handleAlertDetails}
             onReturn={toggleBulkPane} />
         )}
         

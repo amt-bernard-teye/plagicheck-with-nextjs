@@ -66,6 +66,8 @@ export default function UserDetails(
   let entity = UserTabs.LECTURER === activeTab ? "Lecturer" : "Student";
   let action = userAction === "EDIT" ? "Edit" : "Delete";
   let heading = `${action} ${entity}`;
+  let pageParam = new URLSearchParams();
+  pageParam.set("tab", "lecturers");
 
   let form = activeTab === UserTabs.LECTURER ? (
       <LecturerForm 
@@ -128,7 +130,7 @@ export default function UserDetails(
                 </tr>
               ))}
             </DataTable>
-            <Paginator totalRows={lecturerRowCount} />
+            <Paginator totalRows={lecturerRowCount} pageParams={pageParam} />
           </>
         ) : (
           <>
@@ -157,7 +159,7 @@ export default function UserDetails(
                 </tr>
               ))}
             </DataTable>
-            <Paginator totalRows={studentRowCount} />
+            <Paginator totalRows={studentRowCount} pageParams={pageParam} />
           </>
         )}
       </div>
