@@ -60,7 +60,7 @@ export class UserRepository extends BaseRepository<User, UserProp, string> {
     }
 
     let start = 1000;
-    return initial + (start + totalRows);
+    return initial + (start + totalRows + 1);
   }
 
 
