@@ -8,10 +8,11 @@ import ArrowRight from "@/components/atoms/icons/arrow-right";
 
 type PaginatorProps = {
   totalRows: number;
+  pageParams?: URLSearchParams
 }
 
 
-export default function Paginator({totalRows}: PaginatorProps) {
+export default function Paginator({totalRows, pageParams}: PaginatorProps) {
   const { pathname, query } = useRouter();
 
   let currentPage = +(query.page as string) || 0;
@@ -28,7 +29,7 @@ export default function Paginator({totalRows}: PaginatorProps) {
   }
 
   for (let i = 0; i < Math.ceil(totalRows / rowPerPage); i++) {
-    let path = `${pathname}?page=${i + 1}`;
+    let path = `${pathname}?${pageParams ? pageParams.toString() + "&" : ""}page=${i + 1}`;
 
     if (searchTerm) {
       path += `&q=${searchTerm}`;
@@ -63,8 +64,8 @@ export default function Paginator({totalRows}: PaginatorProps) {
     nextPageNumber = currentPage;
   }
 
-  let previousPath = `${pathname}?page=${previousPageNumber}`;
-  let nextPath = `${pathname}?page=${nextPageNumber}`;
+  let previousPath = `${pathname}?${pageParams ? pageParams.toString() + "&" : ""}page=${previousPageNumber}`;
+  let nextPath = `${pathname}?${pageParams ? pageParams.toString() + "&" : ""}page=${nextPageNumber}`;
 
   if (searchTerm) {
     previousPath += `&q=${searchTerm}`;
