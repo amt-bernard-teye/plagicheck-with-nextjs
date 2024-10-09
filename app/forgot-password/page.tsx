@@ -6,8 +6,8 @@ export default function ForgotPassword() {
   return (
     <Auth>
       <AuthHeader
-        heading="Login"
-        description="Please enter your login details below to access your account"/> 
+        heading="Fogot Password"
+        description="Please enter your email to receive the reset link in your mail"/> 
       <ForgotPasswordForm />
     </Auth>
   );

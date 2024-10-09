@@ -1,34 +1,36 @@
+"use client";
+
 import Link from "next/link";
-import { ComponentPropsWithoutRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
 type GeneralProps = {
-  el: "button"
   variant: "primary" | "secondary";
 }
 
-type AnchorProps = {
-  children?: ReactNode
-  href: string;
-} & GeneralProps;
+type AnchorProps = GeneralProps & {
+  el: "link"
+} & ComponentPropsWithoutRef<"a">;
 
-type ButtonProps = GeneralProps & ComponentPropsWithoutRef<"button">;
+type ButtonProps = {
+  el: "button";
+} & GeneralProps & ComponentPropsWithoutRef<"button">;
 
 
-export default function Button({el, ...props}: AnchorProps | ButtonProps) {
-  // if (el === "a") {
-  //   return <Link href={props.href}>{props.children}</Link>
-  // } 
-
-  let classes = "py-3 rounded-lg border ";
+export default function Button(props: AnchorProps | ButtonProps) {
+  let classes = "py-3 rounded-lg flex gap-4 justify-center border disabled:opacity-20 disabled:cursor-not-allowed ";
 
   if (props.variant === "primary") {
-    classes += "bg-[#0267ff] text-white";
+    classes += "bg-[#0267ff] text-white border-[#0267ff] hover:bg-[#67A4FF] hover:border-[#67A4FF] active:bg-[#0252CC] active:border-[#0252CC]";
   }
   else {
-    classes = "";
+    classes += "border-[#a6a6ab] hover:bg-[#E9E9EA] active:bg-[#D2D3D5]";
+  }
+
+  if (props.el === "link") {
+    return <Link className={classes} {...props} href={props.href!}>{props.children}</Link>
   }
 
   return (
-    <button className={classes}>{props.children}</button>
-  )
+    <button className={classes} {...props}>{props.children}</button>
+  );
 }

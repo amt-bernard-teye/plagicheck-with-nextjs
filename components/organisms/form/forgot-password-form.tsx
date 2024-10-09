@@ -16,8 +16,8 @@ export default function ForgotPasswordForm() {
           placeholder="Your email" />
       </FormGroup>
       <div className="flex flex-col gap-4">
-        <Button el="button" variant="primary" disabled={true}>Send reset link</Button>
-        <Button el="button" variant="secondary">
+        <Button el="button" variant="primary">Send reset link</Button>
+        <Button el="link" variant="secondary" href="/">
           <ArrowLeft/> Back to login
         </Button>
       </div>
