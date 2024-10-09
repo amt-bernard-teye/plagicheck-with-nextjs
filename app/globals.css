@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --error-100: #ff0000;
+  --white: #fff;
+}
+
+input + svg {
+  fill: var(--error-100);
+  width: 20px;
+  height: 20px;
+  stroke: var(--white);
+}
