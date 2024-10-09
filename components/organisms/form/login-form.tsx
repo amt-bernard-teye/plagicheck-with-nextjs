@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
 import FormControl from "../../atoms/form-control";
@@ -9,8 +10,11 @@ import Lock from "../../atoms/icons/lock";
 import SMSTracking from "../../atoms/icons/sms-tracking";
 import Label from "../../atoms/label";
 import Button from "../../atoms/button";
+import Eye from "@/components/atoms/icons/eye";
 
 export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <form>
       <FormGroup className="space-y-1 mb-4">
@@ -24,10 +28,10 @@ export default function LoginForm() {
         <Label>Password</Label>
         <FormControl
           leftIcon={<Lock />}
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Type your password here">
-          <button>
-            <EyeSlash />
+          <button onClick={() => setShowPassword(!showPassword)} type="button">
+            {showPassword ? <EyeSlash/> : <Eye />}
           </button>
         </FormControl>
       </FormGroup>
