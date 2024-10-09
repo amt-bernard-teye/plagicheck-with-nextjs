@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 
-import FormControl from "../atoms/form-control";
-import FormGroup from "../atoms/form-group";
-import EyeSlash from "../atoms/icons/eye-slash";
-import Lock from "../atoms/icons/lock";
-import SMSTracking from "../atoms/icons/sms-tracking";
-import Label from "../atoms/label";
-import Button from "../atoms/button";
+import FormControl from "../../atoms/form-control";
+import FormGroup from "../../atoms/form-group";
+import EyeSlash from "../../atoms/icons/eye-slash";
+import Lock from "../../atoms/icons/lock";
+import SMSTracking from "../../atoms/icons/sms-tracking";
+import Label from "../../atoms/label";
+import Button from "../../atoms/button";
 
 export default function LoginForm() {
   return (

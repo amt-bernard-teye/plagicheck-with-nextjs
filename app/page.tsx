@@ -1,6 +1,6 @@
 import AuthHeader from "@/components/molecules/auth-header";
 import Auth from "@/components/templates/auth";
-import LoginForm from "@/components/organisms/login-form";
+import LoginForm from "@/components/organisms/form/login-form";
 
 export default function Home() {
   return (
