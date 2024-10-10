@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,87 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model archive {
+  id           Int                @id @default(autoincrement())
+  fileName     String
+  path         String
+  createdAt    DateTime           @default(now())
+  documentType DocumentType
+  departmentId Int
+  status       AvailabilityStatus @default(AVAILABLE)
+  department  department        @relation(fields: [departmentId], references: [id])
+
+  @@map("archives")
+}
+
+model department {
+  id        Int                @id @default(autoincrement())
+  name      String
+  facultyId Int
+  status    AvailabilityStatus @default(AVAILABLE)
+  archives  archive[]
+  faculty faculty          @relation(fields: [facultyId], references: [id])
+  lecturers lecturer[]
+  students  student[]
+	@@map("departments")
+}
+
+model faculty {
+  id          Int                @id @default(autoincrement())
+  name        String
+  status      AvailabilityStatus @default(AVAILABLE)
+  departments department[]
+	@@map("faculties")
+}
+
+model lecturer {
+  id            Int         @id @default(autoincrement())
+  userId        String
+  departmentId  Int
+  qualification String
+  department   department @relation(fields: [departmentId], references: [id])
+  user         user       @relation(fields: [userId], references: [id])
+	@@map("lecturers")
+}
+
+model student {
+  id           Int         @id @default(autoincrement())
+  userId       String
+  departmentId Int
+  department  department @relation(fields: [departmentId], references: [id])
+  user        user       @relation(fields: [userId], references: [id])
+	@@map("students")
+}
+
+model user {
+  id          String             @id
+  name        String
+  email       String
+  password    String
+  phoneNumber String
+  role        Role
+  image       String?
+  status      AvailabilityStatus @default(AVAILABLE)
+  lecturers   lecturer[]
+  students    student[]
+	@@map("users")
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  UN_AVAILABLE
+}
+
+enum DocumentType {
+  WORD
+  PDF
+  TEXT
+}
+
+enum Role {
+  ADMIN
+  LECTURER
+  STUDENT
 }
