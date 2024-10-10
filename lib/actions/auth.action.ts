@@ -39,10 +39,9 @@ export async function loginAction(initialState: any, formData: FormData) {
       maxAge: tokenDuration,
       path: "/"
     });
-    cookies().set("user", JSON.stringify(user), {
-      maxAge: tokenDuration,
-      path: "/"
-    });
+    cookies().set("user_id", user.id!, { maxAge: tokenDuration, path: "/" });
+    cookies().set("user_email", user.email, { maxAge: tokenDuration, path: "/" });
+    cookies().set("user_name", user.name, { maxAge: tokenDuration, path: "/" });
     
     return {
       message: "Access granted",
@@ -65,7 +64,9 @@ export async function loginAction(initialState: any, formData: FormData) {
 
 
 export async function logoutAction() {
-  cookies().delete("user");
+  cookies().delete("user_id");
+  cookies().delete("user_email");
+  cookies().delete("user_name");
   cookies().delete("_auth-tk");
   redirect("/");
 } 
