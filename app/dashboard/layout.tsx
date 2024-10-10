@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
 
 import "@/app/globals.css";
-import SideDrawer from "@/components/organisms/side-drawer";
-import AppBrand from "@/components/molecules/app-brand";
-import Bars from "@/components/atoms/icons/bars";
+import DashboardInteractivity from "@/components/templates/dashboard-interactivity";
 
 export default function DashboardLayout(
   {children}: {
@@ -12,18 +10,9 @@ export default function DashboardLayout(
 ) {
   return (
     <main className="w-[100%] h-[100vh] lg:flex">
-      <SideDrawer/>
-
-      {/* <header>
-        <AppBrand />
-        <button>
-          <Bars/>
-        </button>
-      </header> */}
-
-      <section className="flex-grow">
+      <DashboardInteractivity>
         { children }
-      </section>
+      </DashboardInteractivity>
     </main>
   );
 }
