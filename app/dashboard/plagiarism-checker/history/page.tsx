@@ -1,5 +1,9 @@
+import PageHeader from "@/components/organisms/page-header";
+
 export default function Page() {
   return (
-    <h1>History</h1>
+    <>
+      <PageHeader />
+    </>
   );
 }

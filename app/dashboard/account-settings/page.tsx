@@ -1,5 +1,9 @@
+import PageHeader from "@/components/organisms/page-header";
+
 export default function AccountSettings() {
   return (
-    <h1>Account Settings</h1>
+    <>
+      <PageHeader />
+    </>
   );
 }
