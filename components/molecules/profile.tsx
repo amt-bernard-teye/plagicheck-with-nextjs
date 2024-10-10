@@ -8,6 +8,7 @@ import profileImage from "@/public/profile.jpg";
 export default function Profile() {
   let hasImage = false;
   let [ _, email, name ] = document.cookie.split(";").map(value => value.split("=")[1]);
+  let userEmail = email || "";
   
   return (
     <div className="flex gap-4 items-center">
@@ -20,7 +21,7 @@ export default function Profile() {
       </div>
       <div>
         <h5 className="font-semibold">{ name }</h5>
-        <p className="text-[0.875em]">{email.replace("%", "@")}</p>
+        <p className="text-[0.875em]">{userEmail.replace("%", "@")}</p>
       </div>
     </div>
   );

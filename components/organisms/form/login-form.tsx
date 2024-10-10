@@ -15,22 +15,15 @@ import Button from "../../atoms/button";
 import Eye from "@/components/atoms/icons/eye";
 import FormControlError from "@/components/atoms/form-control-error";
 import { loginValidationSchema } from "@/lib/validation/login.validation";
-import { useFormState, useFormStatus } from "react-dom";
-import { loginAction } from "@/lib/actions/auth.action";
 import Alert from "@/components/molecules/alert";
 import { StatusCode } from "@/lib/enum/status-code";
-
-const initialState = {
-  message: "",
-  status: 0
-};
+import { AlertResponse } from "@/lib/types/alert-response.type";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { pending } = useFormStatus();
   const timerRef = useRef<NodeJS.Timeout>();
+  const [alertResponse, setAlertResponse] = useState<AlertResponse>();
   const [formSubmissionState, setFormSubmissionState] = useState<"pending" | "submitting" | "done">("pending");
-  const [ state, formAction ] = useFormState(loginAction, initialState);
   const [showPassword, setShowPassword] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -42,25 +35,32 @@ export default function LoginForm() {
   });
 
 
-  function handleSubmit(value: {username: string, password: string}) {
+  async function handleSubmit(value: {username: string, password: string}) {
     setFormSubmissionState("submitting");
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
-    const formData = new FormData();
-    formData.append("username", value.username);
-    formData.append("password", value.password);
-    formAction(formData);
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(value),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const result = await response.json();
 
-    if (!pending) {
-      setFormSubmissionState("done");
-      timerRef.current = setTimeout(() => {
-        setFormSubmissionState("pending");
+    setAlertResponse(result);
+    setFormSubmissionState("done");
+
+    timerRef.current = setTimeout(() => {
+      if (result.status === StatusCode.SUCCESS) {
         router.push("/dashboard");
-      }, 3000);
-    }
+      }
+  
+      setFormSubmissionState("pending");
+    }, 2000);
   }
 
 
@@ -103,10 +103,10 @@ export default function LoginForm() {
         </div>
       </form>
 
-      {(formSubmissionState === "done" && state.message) && (
+      {(formSubmissionState === "done" && alertResponse) && (
         <Alert
-          message={state.message}
-          variant={state.status === StatusCode.SUCCESS ? "success" : "error"} />
+          message={alertResponse.message}
+          variant={alertResponse.status === StatusCode.SUCCESS ? "success" : "error"} />
       )}
     </>
   );
