@@ -1,9 +1,8 @@
 "use client";
 
-import { IoClose } from "react-icons/io5";
-
 import CheckCircle from "../atoms/icons/check-circle";
 import CloseCircle from "../atoms/icons/close-circle";
+import CloseButton from "../atoms/close-button";
 
 type AlertProps = {
   variant: "success" | "error",
@@ -26,9 +25,7 @@ export default function Alert({variant, message}: AlertProps) {
         {variant === "success" ? <CheckCircle /> : <CloseCircle /> }
         <p className={variant === "success" ? "text-[#00e600]" : "text-[#FF0000]"}>{ message }</p>
       </div>
-      <button className="text-2xl hover:text-[#ff0000] w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
-        <IoClose/>
-      </button>
+      <CloseButton />
     </div>
   );
 }
