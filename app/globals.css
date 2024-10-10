@@ -3,8 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --error-100: #ff0000;
   --white: #fff;
+
+  --black-200: #1a1a2a;
+  --black-300: #333441;
+  --black-400: #292d32;
+
+  --sea-blue-100: #0267ff;
+  --sea-blue-500: #67A4ff;
+  --sea-blue-900: #0252cc;
+
+  --gray-300: #4d4d56;
+  --gray-600: #fafafb;
+  --gray-700: #afafab;
+  --gray-800: #bcbcc0;
+  --gray-900: #d2d3d5;
+  --gray-1000: #e9e9ea;
+
+  --error-100: #ff0000;
+  --error-500: #ff6666;
+  --error-900: #cc0000;
+
+  --success-100: #00e600;
 }
 
 input + svg {
@@ -12,4 +32,21 @@ input + svg {
   width: 20px;
   height: 20px;
   stroke: var(--white);
+}
+
+.link svg {
+  stroke: var(--black-200);
+}
+
+.link-active-f svg {
+  fill: var(--white);
+  stroke: var(--white);
+}
+
+.link-active svg {
+  stroke: var(--white);
+}
+
+.dp-link-active svg {
+  fill: var(--white);
 }
