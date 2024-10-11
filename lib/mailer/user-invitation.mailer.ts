@@ -12,7 +12,7 @@ export class UserInvitationMailer extends BaseMailer<UserInvitationDetails> {
 
 
   protected getHtmlContent(content: UserInvitationDetails): Promise<string> {
-    const templatePath = path.join(process.cwd(), "public", "views", "invitation.ejs");
+    const templatePath = path.join(process.cwd(), "public", "templates", "invitation.ejs");
     return ejs.renderFile(templatePath, content);
   }
 
