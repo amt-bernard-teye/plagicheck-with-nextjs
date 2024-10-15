@@ -13,7 +13,8 @@ const passwordValidationSchema = Yup.object({
   newPassword: Yup.string().required('New password is required')
     .min(8, "Must be 8 characters or more")
     .max(16, "Must be 16 characters or less")
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).trim(),
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/, "Only letters, numbers and symbols are allowed")
+    .trim(),
   confirmPassword: Yup.string().required('Confirm password is required')
     .test({
       test: (value, ctx) => {
