@@ -99,7 +99,9 @@ export default function LoginForm() {
         </div>
         <div className="flex flex-col">
           <Button el="button" variant="primary" type="submit"
-            disabled={formSubmissionState === "submitting"}>Login</Button>
+            disabled={formSubmissionState !== "pending"}>
+            {formSubmissionState === "pending" ? 'Login' : 'Loading...'}
+          </Button>
         </div>
       </form>
 

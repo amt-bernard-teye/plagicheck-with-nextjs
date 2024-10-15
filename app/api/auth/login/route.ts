@@ -1,11 +1,12 @@
 import { compare } from "bcryptjs";
-import { ValidationError } from "yup";
 
 import { AppException } from "@/lib/exceptions/app.exception";
 import { UserRepository } from "@/lib/repository/user.repository";
 import { loginValidationSchema } from "@/lib/validation/login.validation";
 import { StatusCode } from "@/lib/enum/status-code";
 import { setAuthCookie } from "@/lib/util/setup-cookie.util";
+import { AvailabilityStatus } from "@prisma/client";
+import { getExceptionMessage } from "@/lib/exceptions/exception-handler";
 
 
 export async function POST(req: Request) {
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
     const hashedPassword = existingUser ? existingUser.password! : "";
     const samePassword = await compare(validatedData.password, hashedPassword);
 
-    if (!existingUser || !samePassword) {
+    if (!existingUser || !samePassword || existingUser.status === AvailabilityStatus.UN_AVAILABLE) {
       throw new AppException("Wrong credentials");
     }
 
@@ -30,14 +31,7 @@ export async function POST(req: Request) {
     });
   }
   catch(error) {
-    let message = "Something went wrong";
-
-    if (error instanceof ValidationError) {
-      message = "Validation failed"
-    }
-    else if (error instanceof AppException) {
-      message = error.message
-    }
+    let message = getExceptionMessage(error);
 
     return Response.json({ 
       message, 
