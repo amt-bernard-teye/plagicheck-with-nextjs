@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-import "@/app/globals.css";
 import DashboardInteractivity from "@/components/templates/dashboard-interactivity";
+import "@/app/globals.css";
 
 export default function DashboardLayout(
   {children}: {
@@ -9,7 +9,7 @@ export default function DashboardLayout(
   }
 ) {
   return (
-    <main className="w-[100%] h-[100vh] lg:flex">
+    <main className="w-[100%] h-[100vh] lg:flex overflow-auto md:overflow-hidden">
       <DashboardInteractivity>
         { children }
       </DashboardInteractivity>

@@ -54,3 +54,26 @@ input + svg {
 .dp-link-active svg {
   fill: var(--white);
 }
+
+.btn-delete svg {
+  stroke: var(--error-100);
+}
+
+.active svg path {
+  stroke: #0267FF;
+}
+
+.camera svg path:nth-child(1) {
+  fill: #0267FF;
+  stroke: #0267FF;
+}
+
+.camera svg path:nth-child(2) {
+  fill: #0267FF;
+  stroke: #CCD3E0;
+}
+
+.camera svg path:nth-child(3) {
+  fill: #CCD3E0;
+  stroke: #CCD3E0;
+}
