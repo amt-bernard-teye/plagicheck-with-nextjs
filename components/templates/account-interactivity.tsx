@@ -14,9 +14,10 @@ import { deleteAccountAction } from "@/lib/actions/auth.action";
 type AccountInteractivityProps = {
   id: string;
   name: string;
+  imagePath: string;
 }
 
-export default function AccountInteractivity({id, name}: AccountInteractivityProps) {
+export default function AccountInteractivity({id, name, imagePath}: AccountInteractivityProps) {
   const [activeTab, setActiveTab] = useState<"personal" | "password">("personal");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -42,7 +43,7 @@ export default function AccountInteractivity({id, name}: AccountInteractivityPro
         
         <div className="flex-grow p-[19px] xl:p-[41px]">
           {activeTab === "personal" 
-            ? <PersonalInformation id={id} name={name} /> 
+            ? <PersonalInformation id={id} name={name} imagePath={imagePath} /> 
             : <ChangePassword />
           }
         </div>

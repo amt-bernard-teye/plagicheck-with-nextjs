@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 
 import Image from "next/image";
 import Heading from "../atoms/heading";
-import profile from "@/public/profile.jpg";
 import Camera from "../atoms/icons/camera";
 import FormGroup from "../atoms/form-group";
 import Label from "../atoms/label";
@@ -17,6 +16,7 @@ import { post } from "@/lib/util/http-request";
 import Alert from "../molecules/alert";
 import { AlertResponse } from "@/lib/types/alert-response.type";
 import { StatusCode } from "@/lib/enum/status-code";
+import Person from "../atoms/icons/person";
 
 type FormValues = {
   firstName: string;
@@ -28,9 +28,10 @@ type FormValues = {
 type PersonalInformationProps = {
   id: string;
   name: string;
+  imagePath: string;
 }
 
-export default function PersonalInformation({id, name}: PersonalInformationProps) {
+export default function PersonalInformation({id, name, imagePath}: PersonalInformationProps) {
   const timerRef = useRef<NodeJS.Timeout>();
   const [alertResponse, setAlertResponse] = useState<AlertResponse>();
   const [formSubmissionState, setFormSubmissionState] = useState<"pending" | "submitting" | "done">("pending");
@@ -80,7 +81,14 @@ export default function PersonalInformation({id, name}: PersonalInformationProps
       <Heading>Personal Information</Heading>
       <div className="flex items-center gap-6 mt-9 mb-10">
         <div className="w-[114px] h-[114px] shadow-md rounded-full border relative">
-          <Image src={profile} alt="Profile image" className="w-full h-full object-cover rounded-full" priority/>
+          {imagePath 
+            ? (
+                <div className="relative w-full h-full">
+                  <Image src={imagePath} alt="Profile image" className="w-full h-full object-cover rounded-full" priority fill/>
+                </div>
+              )
+            : <div className="w-full h-full flex justify-center items-center rounded-full profile"><Person /></div>
+          }
           <button
             className="w-[40px] h-[40px] absolute bottom-0 right-0 flex justify-center items-center bg-[#CCD3E0] rounded-full camera border-2 border-[#fff]"
             onClick={() => fileUploader.current?.click()}>
