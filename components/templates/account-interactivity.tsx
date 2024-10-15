@@ -9,6 +9,7 @@ import PersonalInformation from "../organisms/personal-information";
 import ChangePassword from "../organisms/change-password";
 import Modal from "../organisms/modal";
 import Button from "../atoms/button";
+import { deleteAccountAction } from "@/lib/actions/auth.action";
 
 type AccountInteractivityProps = {
   id: string;
@@ -56,7 +57,7 @@ export default function AccountInteractivity({id, name}: AccountInteractivityPro
                 onClick={() => setShowLogoutModal(false)}>No</Button>
             </div>
             <div className="basis-[50%] flex flex-col">
-              <Button el="button" variant="danger" type="submit">Yes</Button>
+              <Button el="button" variant="danger" type="submit" onClick={async () => await deleteAccountAction()}>Yes</Button>
             </div>
           </div>
         </Modal>
