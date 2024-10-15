@@ -10,7 +10,12 @@ import ChangePassword from "../organisms/change-password";
 import Modal from "../organisms/modal";
 import Button from "../atoms/button";
 
-export default function AccountInteractivity() {
+type AccountInteractivityProps = {
+  id: string;
+  name: string;
+}
+
+export default function AccountInteractivity({id, name}: AccountInteractivityProps) {
   const [activeTab, setActiveTab] = useState<"personal" | "password">("personal");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -36,7 +41,7 @@ export default function AccountInteractivity() {
         
         <div className="flex-grow p-[19px] xl:p-[41px]">
           {activeTab === "personal" 
-            ? <PersonalInformation /> 
+            ? <PersonalInformation id={id} name={name} /> 
             : <ChangePassword />
           }
         </div>
