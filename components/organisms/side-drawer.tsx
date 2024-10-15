@@ -33,7 +33,7 @@ export default function SideDrawer({ state, onHide }: SideDrawerProps) {
     <>
       <aside 
         className={`fixed top-0 left-0 overflow-x-hidden lg:w-[270px] h-[100vh] lg:static lg:basis-[270px] lg:h-auto bg-[#e9e9ea] border border-r-[#bcbcc0] overflow-y-auto py-8 xl:py-16
-          ${state ? 'w-[70%] z-10' : 'w-0'} transition-[width]`}>
+          ${state ? 'w-[70%] z-10 md:w-[270px]' : 'w-0'} transition-[width]`}>
       <div className="flex justify-center">
         <AppBrand />
       </div>
