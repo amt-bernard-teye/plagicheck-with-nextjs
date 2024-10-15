@@ -5,10 +5,13 @@ import Image from "next/image";
 import Person from "@/components/atoms/icons/person";
 import profileImage from "@/public/profile.jpg";
 
-export default function Profile() {
+type ProfileProps = {
+  name: string;
+  email: string;
+}
+
+export default function Profile({name, email}: ProfileProps) {
   let hasImage = false;
-  // let [ _, email, name ] = window.document.cookie.split(";").map(value => value.split("=")[1]);
-  // let userEmail = email || "";
   
   return (
     <div className="flex gap-4 items-center">
@@ -20,10 +23,8 @@ export default function Profile() {
         <span className="absolute bottom-0 right-0 w-4 h-4 bg-[var(--success-100)] inline-block rounded-full border-2 border-white"></span>
       </div>
       <div>
-        {/* <h5 className="font-semibold">{ name }</h5> */}
-        <h5 className="font-semibold">James Smith</h5>
-        {/* <p className="text-[0.875em]">{userEmail.replace("%", "@")}</p> */}
-        <p className="text-[0.875em]">james45@gmail.com</p>
+        <h5 className="font-semibold">{ name }</h5>
+        <p className="text-[0.875em]">{ email }</p>
       </div>
     </div>
   );
