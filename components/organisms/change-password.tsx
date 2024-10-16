@@ -2,7 +2,6 @@
 
 import { useFormik } from "formik";
 import { useRef, useState } from "react";
-import { redirect } from "next/navigation";
 
 import Button from "../atoms/button";
 import FormControl from "../atoms/form-control";

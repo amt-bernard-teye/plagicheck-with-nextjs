@@ -2,7 +2,6 @@
 
 import { useDebouncedCallback } from "use-debounce";
 import { ChangeEvent } from "react";
-// import { useRouter } from "next/navigation";
 
 import FormControl from "../atoms/form-control";
 import Search from "@/components/atoms/icons/search";
@@ -18,9 +17,7 @@ type PageHeaderProps = {
 
 
 export default function PageHeader({name, email, image, onSearch}: PageHeaderProps) {
-  // const router = useRouter();
-  // const searchTerm = router.query["q"] as string || "";
-
+  
   const handleSearch = useDebouncedCallback((event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value || "";
 
@@ -30,12 +27,6 @@ export default function PageHeader({name, email, image, onSearch}: PageHeaderPro
     else {
       const params = new URLSearchParams();
       params.set("q", value);
-
-      // if (value) {
-      //   router.replace(`${router.pathname}?${params.toString()}`);
-      // } else {
-      //   router.replace(`${router.pathname}`);
-      // }
     }
   }, 650);
 
@@ -53,7 +44,6 @@ export default function PageHeader({name, email, image, onSearch}: PageHeaderPro
           type="search"
           placeholder="Search anything here"
           onChange={handleSearch}
-          // defaultValue={searchTerm}
           leftIcon={searchIcon} />
       </div>
       <div className="hidden lg:block">
