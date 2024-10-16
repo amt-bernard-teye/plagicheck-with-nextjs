@@ -78,6 +78,7 @@ export class UserRepository extends BaseRepository<User, UserProp, string> {
         password: entity.password!,
         phoneNumber: entity.phoneNumber,
         role: entity.role,
+        image: entity.image
       },
       select: this.selectedProps()
     });

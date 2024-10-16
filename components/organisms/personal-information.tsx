@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useFormik } from "formik";
 
 import Image from "next/image";
@@ -17,6 +17,9 @@ import Alert from "../molecules/alert";
 import { AlertResponse } from "@/lib/types/alert-response.type";
 import { StatusCode } from "@/lib/enum/status-code";
 import Person from "../atoms/icons/person";
+import profile from "@/public/profile.jpg";
+import { fileUploadAction } from "@/lib/actions/file-upload.action";
+import Spinner from "../atoms/spinner";
 
 type FormValues = {
   firstName: string;
@@ -33,6 +36,9 @@ type PersonalInformationProps = {
 
 export default function PersonalInformation({id, name, imagePath}: PersonalInformationProps) {
   const timerRef = useRef<NodeJS.Timeout>();
+  const [hasImage, setHasImage] = useState(imagePath ? true : false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [image, setImage] = useState(imagePath);
   const [alertResponse, setAlertResponse] = useState<AlertResponse>();
   const [formSubmissionState, setFormSubmissionState] = useState<"pending" | "submitting" | "done">("pending");
   const fileUploader = useRef<HTMLInputElement>(null);
@@ -76,25 +82,54 @@ export default function PersonalInformation({id, name, imagePath}: PersonalInfor
   }
 
 
+  function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
+    
+    if (!file) {
+      return;
+    }
+
+    setUploadingImage(true);
+    const reader = new FileReader();
+
+    reader.addEventListener("load", async function() {
+      const result = reader.result as string;
+
+      setImage(result);
+      setHasImage(true);
+
+      fileUploader.current!.files = null;
+      fileUploader.current!.value = "";
+
+      const formData = new FormData();
+      formData.append("file", file);
+      await fileUploadAction(formData);
+      setUploadingImage(false);
+    });
+
+    reader.readAsDataURL(file);
+  }
+
+
   return (
     <>
-      <Heading>Personal Information</Heading>
+      <div className="flex items-center justify-between">
+        <Heading>Personal Information</Heading>
+        {uploadingImage && <Spinner />}
+      </div>
       <div className="flex items-center gap-6 mt-9 mb-10">
         <div className="w-[114px] h-[114px] shadow-md rounded-full border relative">
-          {imagePath 
-            ? (
-                <div className="relative w-full h-full">
-                  <Image src={imagePath} alt="Profile image" className="w-full h-full object-cover rounded-full" priority fill/>
-                </div>
-              )
-            : <div className="w-full h-full flex justify-center items-center rounded-full profile"><Person /></div>
-          }
+          <div className={`relative w-full h-full ${!hasImage && 'hidden'}`}>
+            <Image src={hasImage ? image : profile} alt="Profile image" className="w-full h-full object-cover rounded-full" priority
+             width={114} height={114}/>
+          </div>
+          <div className={`w-full h-full flex justify-center items-center rounded-full profile ${hasImage && 'hidden'}`}><Person /></div>
           <button
             className="w-[40px] h-[40px] absolute bottom-0 right-0 flex justify-center items-center bg-[#CCD3E0] rounded-full camera border-2 border-[#fff]"
             onClick={() => fileUploader.current?.click()}>
             <Camera />
           </button>
-          <input type="file" hidden ref={fileUploader} accept="image/*"/>
+          <input type="file" hidden ref={fileUploader} accept="image/*" onChange={handleFileUpload}/>
         </div>
         <div className="space-y-2">
           <Heading>{name}</Heading>
