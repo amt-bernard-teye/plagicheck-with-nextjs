@@ -11,7 +11,7 @@ export default function AccountSettings() {
 
   return (
     <>
-      <PageHeader email={email} name={name} />
+      <PageHeader email={email} name={name} image={imagePath} />
       <AccountInteractivity 
         id={id} 
         name={name}

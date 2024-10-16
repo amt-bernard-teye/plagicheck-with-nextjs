@@ -12,11 +12,12 @@ import Profile from "../molecules/profile";
 type PageHeaderProps = {
   name: string;
   email: string;
+  image?: string;
   onSearch?: (value: string) => void;
 }
 
 
-export default function PageHeader({name, email, onSearch}: PageHeaderProps) {
+export default function PageHeader({name, email, image, onSearch}: PageHeaderProps) {
   // const router = useRouter();
   // const searchTerm = router.query["q"] as string || "";
 
@@ -56,7 +57,7 @@ export default function PageHeader({name, email, onSearch}: PageHeaderProps) {
           leftIcon={searchIcon} />
       </div>
       <div className="hidden lg:block">
-        <Profile email={email} name={name} />
+        <Profile email={email} name={name} image={image} />
       </div>
     </header>
   );
