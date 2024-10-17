@@ -5,6 +5,7 @@ import { FacultyRepository } from "@/lib/repository/faculty.repository";
 import { ensureUserIsLoggedIn } from "@/lib/middleware/authorization-check.middleware";
 import { getExceptionMessage } from "@/lib/exceptions/exception-handler";
 import { facultyValidationSchema } from "@/lib/validation/academic-divisition.validation";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   const isLoggedIn = ensureUserIsLoggedIn();
@@ -19,6 +20,8 @@ export async function POST(req: Request) {
   try {
     const validatedData = await facultyValidationSchema.validate(data);
     const faculty = await repo.create(validatedData);
+
+    revalidatePath("/dashboard/academic-division");
 
     return Response.json({
       message: "Faculty added successfully",

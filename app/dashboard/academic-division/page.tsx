@@ -4,21 +4,31 @@ import PageHeader from "@/components/organisms/page-header";
 import AcademicDivisionInteractivity from "@/components/templates/academic-division-interactivity";
 import { FacultyRepository } from "@/lib/repository/faculty.repository";
 
-export default async function AcademicDivision() {
+type AcademicDivisionProps = {
+  searchParams: {
+    page?: number;
+    q?: string;
+  }
+}
+
+export default async function AcademicDivision({searchParams}: AcademicDivisionProps) {
   const name = cookies().get("user_name")?.value || "";
   const email = cookies().get("user_email")?.value || "";
   const imagePath = cookies().get("user_image_path")?.value || "";
   const facultyRepo = new FacultyRepository();
-  const [faculties, count] = await Promise.all([
-    facultyRepo.paginate("", 0),
-    facultyRepo.count("")
-  ]);
 
+  let page = searchParams.page ? searchParams.page - 1 : 0;
+  let query = searchParams.q ? searchParams.q : "";
+
+  const [faculties, count] = await Promise.all([
+    facultyRepo.paginate(query, page),
+    facultyRepo.count(query)
+  ]);
 
   return (
     <>
       <PageHeader email={email} name={name} image={imagePath} />
-      <AcademicDivisionInteractivity faculties={faculties}/>
+      <AcademicDivisionInteractivity faculties={faculties} rowCount={count}/>
     </>
   );
 }

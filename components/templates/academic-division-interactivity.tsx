@@ -14,6 +14,7 @@ import DataTable from "../molecules/data-table/data-table";
 import DataTableActions from "../molecules/data-table/data-table-action";
 import DepartmentList from "../molecules/department-list";
 import { Faculty } from "@/lib/types/faculty.type";
+import Paginator from "../molecules/paginator";
 
 enum UserTab {
   DEPARTMENT = "deparment",
@@ -27,9 +28,10 @@ type UserAction = {
 
 type AcademicDivisionInteractivityProps = {
   faculties: Faculty[];
+  rowCount: number;
 }
 
-export default function AcademicDivisionInteractivity({faculties}: AcademicDivisionInteractivityProps) {
+export default function AcademicDivisionInteractivity({faculties, rowCount}: AcademicDivisionInteractivityProps) {
   const [userAction, setUserAction] = useState<UserAction>();
   const [alertResponse, setAlertResponse] = useState<AlertResponse>();
   const [formSubmissionState, setFormSubmissionState] = useState<"pending" | "submitting" | "done">("pending");
@@ -99,7 +101,7 @@ export default function AcademicDivisionInteractivity({faculties}: AcademicDivis
             ))}
           </DataTable>
 
-          {/* <Paginator totalRows={count}/> */}
+          <Paginator totalRows={rowCount}/>
         </div>
 
       {userAction && (

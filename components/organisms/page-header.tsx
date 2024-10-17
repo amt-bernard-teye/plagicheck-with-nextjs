@@ -6,6 +6,7 @@ import { ChangeEvent } from "react";
 import FormControl from "../atoms/form-control";
 import Search from "@/components/atoms/icons/search";
 import Profile from "../molecules/profile";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 
 type PageHeaderProps = {
@@ -17,6 +18,10 @@ type PageHeaderProps = {
 
 
 export default function PageHeader({name, email, image, onSearch}: PageHeaderProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get("q") as string || "";
   
   const handleSearch = useDebouncedCallback((event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value || "";
@@ -27,6 +32,12 @@ export default function PageHeader({name, email, image, onSearch}: PageHeaderPro
     else {
       const params = new URLSearchParams();
       params.set("q", value);
+
+      if (value) {
+        router.replace(`${pathname}?${params.toString()}`);
+      } else {
+        router.replace(`${pathname}`);
+      }
     }
   }, 650);
 
@@ -44,6 +55,7 @@ export default function PageHeader({name, email, image, onSearch}: PageHeaderPro
           type="search"
           placeholder="Search anything here"
           onChange={handleSearch}
+          defaultValue={searchTerm}
           leftIcon={searchIcon} />
       </div>
       <div className="hidden lg:block">
