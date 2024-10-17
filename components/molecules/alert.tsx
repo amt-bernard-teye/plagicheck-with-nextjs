@@ -10,7 +10,7 @@ type AlertProps = {
 }
 
 export default function Alert({variant, message}: AlertProps) {
-  let alertClass = "fixed top-12 left-[50%] translate-x-[-50%] bg-white flex items-center w-[95%] md:w-[554px] justify-between py-2 px-4 rounded-md shadow border ";
+  let alertClass = "fixed top-12 left-[50%] translate-x-[-50%] bg-white flex items-center w-[95%] md:w-[554px] justify-between py-2 px-4 rounded-md shadow border z-20 ";
 
   if (variant === "success") {
     alertClass += "border-[#00e600]";
