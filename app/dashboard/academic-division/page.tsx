@@ -20,15 +20,19 @@ export default async function AcademicDivision({searchParams}: AcademicDivisionP
   let page = searchParams.page ? searchParams.page - 1 : 0;
   let query = searchParams.q ? searchParams.q : "";
 
-  const [faculties, count] = await Promise.all([
+  const [paginatedFaculties, count, allFaculties] = await Promise.all([
     facultyRepo.paginate(query, page),
-    facultyRepo.count(query)
+    facultyRepo.count(query),
+    facultyRepo.findAll()
   ]);
 
   return (
     <>
       <PageHeader email={email} name={name} image={imagePath} />
-      <AcademicDivisionInteractivity faculties={faculties} rowCount={count}/>
+      <AcademicDivisionInteractivity 
+        paginatedFaculties={paginatedFaculties} 
+        rowCount={count}
+        allFaculties={allFaculties}/>
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Button from "../atoms/button";
 import SubHeader from "../molecules/sub-header";
@@ -15,6 +15,9 @@ import DataTableActions from "../molecules/data-table/data-table-action";
 import DepartmentList from "../molecules/department-list";
 import { Faculty } from "@/lib/types/faculty.type";
 import Paginator from "../molecules/paginator";
+import DepartmentForm from "../organisms/form/department-form";
+import { Department } from "@/lib/types/department.type";
+import { FormSubmissionState } from "@/lib/enum/form-submission-state.enum";
 
 enum UserTab {
   DEPARTMENT = "deparment",
@@ -27,14 +30,102 @@ type UserAction = {
 }
 
 type AcademicDivisionInteractivityProps = {
-  faculties: Faculty[];
+  paginatedFaculties: Faculty[];
   rowCount: number;
+  allFaculties: Faculty[];
 }
 
-export default function AcademicDivisionInteractivity({faculties, rowCount}: AcademicDivisionInteractivityProps) {
+export default function AcademicDivisionInteractivity({paginatedFaculties, rowCount, allFaculties}: AcademicDivisionInteractivityProps) {
+  const [selectedDepartment, setSelectedDepartment] = useState<Department>();
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty>();
   const [userAction, setUserAction] = useState<UserAction>();
   const [alertResponse, setAlertResponse] = useState<AlertResponse>();
-  const [formSubmissionState, setFormSubmissionState] = useState<"pending" | "submitting" | "done">("pending");
+  const [formSubmissionState, setFormSubmissionState] = useState<FormSubmissionState>(FormSubmissionState.PENDING);
+  const [faculties, setFaculties] = useState<Faculty[]>(paginatedFaculties);
+  const [facultyRows, setFacultyRows] = useState(rowCount);
+
+  
+  useEffect(() => {
+    if (paginatedFaculties) {
+      setFaculties(paginatedFaculties);
+    }
+  }, [paginatedFaculties]);
+
+
+  function handleSelectedFaculty(facultyId: number) {
+    const faculty = faculties.find(item => item.id === facultyId);
+
+    if (!faculty) {
+      return;
+    }
+
+    setSelectedFaculty(faculty);
+  }
+
+
+  function handleSelectedDepartment(departmentId: number, facultyId: number) {
+    const faculty = faculties.find(item => item.id === facultyId);
+
+    if (!faculty) {
+      return;
+    }
+
+    const department = faculty.departments?.find(item => item.id === departmentId);
+
+    if (!department) {
+      return;
+    }
+
+    setSelectedDepartment(department);
+  }
+
+
+  function handleUserAction(tab: UserTab, action: FormAction) {
+    setUserAction({
+      activeTab: tab,
+      formAction: action
+    });
+  }
+
+
+  function handleSaveFaculty(faculty: Faculty) {
+    const existingFacultyIndex = faculties.findIndex(fac => fac.id === faculty.id);
+
+    if (existingFacultyIndex !== -1) {
+      const facultyToEdit = {...faculties[existingFacultyIndex]};
+      facultyToEdit.name = faculty.name;
+      const updatedFaculties = [...faculties];
+      updatedFaculties.splice(existingFacultyIndex, 1, facultyToEdit);
+      setFaculties(updatedFaculties);
+    }
+    else {
+      if (faculties.length < 9) {
+        setFaculties(faculties => [faculty, ...faculties]);
+      }
+      else {
+        const updatedFaculties = [faculty, ...faculties];
+        updatedFaculties.pop();
+        setFaculties(updatedFaculties);
+      }
+    }
+  }
+
+
+  function handleRemoveFaculty(facultyId: number, updatedFaculties: Faculty[], rows: number) {
+    setFaculties(faculties => faculties.filter(faculty => faculty.id !== facultyId));
+    setFaculties(updatedFaculties);
+    setFacultyRows(rows);
+  }
+
+
+  function handleHideModal() {
+    setUserAction(undefined);
+
+    if (selectedFaculty) {
+      setSelectedFaculty(undefined);
+    }
+  }
+
 
   let columnHeadings = ["Faculty name", "Departments", ""];
   let modalHeading = "";
@@ -48,7 +139,27 @@ export default function AcademicDivisionInteractivity({faculties, rowCount}: Aca
   let form: React.JSX.Element | undefined = undefined;
 
   if (userAction && userAction.activeTab === UserTab.FACULTY) {
-    form = <FacultyForm onSetAlertResponse={setAlertResponse} onSetFormState={setFormSubmissionState} />
+    form = (
+      <FacultyForm
+        onSetAlertResponse={setAlertResponse}
+        onSetFormState={setFormSubmissionState}
+        formAction={userAction.formAction}
+        selectedItem={selectedFaculty}
+        onSaveFaculty={handleSaveFaculty}
+        onHideModal={handleHideModal}
+        formSubmissionState={formSubmissionState}
+        onUpdateFaculties={handleRemoveFaculty} />
+    );
+  }
+  else if (userAction && userAction.activeTab === UserTab.DEPARTMENT) {
+    form = (
+      <DepartmentForm 
+        faculties={allFaculties}
+        onCloseModal={() => setUserAction(undefined)}
+        selectedItem={selectedDepartment}
+        onSetAlertResponse={setAlertResponse}
+        formAction={userAction.formAction} />
+    );
   }
 
   return (
@@ -67,6 +178,7 @@ export default function AcademicDivisionInteractivity({faculties, rowCount}: Aca
             </div>
           </div>
       </SubHeader>
+
       <div className="py-[15px] px-[21px] xl:py-[19px] xl:px-[41px]">
           <DataTable columnHeadings={columnHeadings}>
             {faculties.map(faculty => (
@@ -75,25 +187,22 @@ export default function AcademicDivisionInteractivity({faculties, rowCount}: Aca
                 <td>
                   <DepartmentList
                     list={faculty.departments}
-                    // onEdit={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.EDIT)}
-                    onEdit={() => {}}
-                    // onSelectItem={handleSelectedDepartment}
-                    onSelectItem={() => {}}
-                    // onDelete={() => toggleModal(AcademicTab.DEPARTMENT, AcademicAction.DELETE)}
-                    onDelete={() => {}}
+                    onEdit={() => handleUserAction(UserTab.DEPARTMENT, FormAction.EDIT)}
+                    onSelectItem={handleSelectedDepartment}
+                    onDelete={() => handleUserAction(UserTab.DEPARTMENT, FormAction.DELETE)}
                     />
                 </td>
                 <td>
                   <DataTableActions>
                     <button className="text-left hover:text-[#0267ff] hover:font-semibold"
                       onClick={() => {
-                        // toggleModal(AcademicTab.FACULTY, AcademicAction.EDIT);
-                        // handleSelectedFaculty(faculty.id!);
+                        handleUserAction(UserTab.FACULTY, FormAction.EDIT)
+                        handleSelectedFaculty(faculty.id!);
                       }}>Edit Faculty</button>
                     <button className="text-left hover:text-[#0267ff] hover:font-semibold"
                       onClick={() => {
-                        // toggleModal(AcademicTab.FACULTY, AcademicAction.DELETE);
-                        // handleSelectedFaculty(faculty.id!);
+                        handleUserAction(UserTab.FACULTY, FormAction.DELETE)
+                        handleSelectedFaculty(faculty.id!);
                       }}>Delete Faculty</button>
                   </DataTableActions>
                 </td>
@@ -101,7 +210,7 @@ export default function AcademicDivisionInteractivity({faculties, rowCount}: Aca
             ))}
           </DataTable>
 
-          <Paginator totalRows={rowCount}/>
+          <Paginator totalRows={facultyRows}/>
         </div>
 
       {userAction && (
@@ -110,7 +219,7 @@ export default function AcademicDivisionInteractivity({faculties, rowCount}: Aca
         </Modal>
       )}
 
-      {(formSubmissionState === "done" && alertResponse) && (
+      {(formSubmissionState === FormSubmissionState.DONE && alertResponse) && (
         <Alert
           message={alertResponse.message}
           variant={alertResponse.status === StatusCode.SUCCESS ? "success" : "error"} />

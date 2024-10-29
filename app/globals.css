@@ -27,6 +27,10 @@
   --success-100: #00e600;
 }
 
+body {
+  color: var(--black-200);
+}
+
 svg {
   stroke: var(--gray-300);
 }
