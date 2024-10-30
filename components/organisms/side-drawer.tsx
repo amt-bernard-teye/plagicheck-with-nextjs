@@ -85,7 +85,7 @@ export default function SideDrawer({ state, onHide }: SideDrawerProps) {
           onClick={onHide}>
           <GoDatabase className="text-2xl"/> Archive
         </Link>
-        <Link href="/dashboard/manage-users?tab=lecturer" 
+        <Link href="/dashboard/manage-users" 
           className={`link flex items-center gap-2 py-2 px-3 rounded-md 
             ${pathname === "/dashboard/manage-users" ? 'bg-[#0267ff] text-white link-active' : 'hover:bg-gray-100'}`}
           onClick={onHide}>
