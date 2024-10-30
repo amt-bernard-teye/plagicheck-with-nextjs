@@ -87,6 +87,10 @@ export default function FacultyForm(
   }
 
   function setAlertResolverTimer() {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
     timerRef.current = setTimeout(() => {
       onSetFormState(FormSubmissionState.PENDING);
     }, 2000);
