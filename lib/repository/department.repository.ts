@@ -10,7 +10,7 @@ export class DepartmentRepository extends BaseRepository<Department, DepartmentP
     return {
       id: true,
       name: true,
-      faculty: true,
+      facultyId: true,
     }
   };
 

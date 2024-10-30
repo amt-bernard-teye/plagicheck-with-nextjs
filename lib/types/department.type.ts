@@ -12,5 +12,5 @@ export type Department = {
 export type DepartmentProps = {
   id: boolean;
   name: boolean;
-  faculty: boolean;
+  facultyId: boolean;
 }
