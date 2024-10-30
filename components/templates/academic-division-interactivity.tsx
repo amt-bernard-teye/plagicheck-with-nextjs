@@ -117,6 +117,18 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
     setFacultyRows(rows);
   }
 
+  
+  function handleRemoveDepartment(facultyId: number, departmentId: number) {
+    const existingFacultyIndex = faculties.findIndex(fac => fac.id === facultyId);
+
+    const updatedFaculties = [...faculties];
+    const faculty = updatedFaculties[existingFacultyIndex];
+    faculty.departments = faculty.departments?.filter(dept => dept.id !== departmentId);
+    updatedFaculties[existingFacultyIndex] = faculty;
+
+    setFaculties(updatedFaculties);
+  }
+
 
   function handleDepartmentFaculty(department: Department) {
     const existingFacultyIndex = faculties.findIndex(faculty => faculty.id === department.facultyId);
@@ -187,6 +199,7 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
     form = (
       <DepartmentForm 
         faculties={allFaculties}
+        onRemoveDepartment={handleRemoveDepartment}
         onCloseModal={() => setUserAction(undefined)}
         selectedItem={selectedDepartment}
         onSetAlertResponse={setAlertResponse}

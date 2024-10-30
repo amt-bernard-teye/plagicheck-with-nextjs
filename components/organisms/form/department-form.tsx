@@ -25,10 +25,11 @@ type DepartmentFormProps = {
   onCloseModal: () => void;
   onSaveDepartment: (value: Department) => void;
   onSetFormState: (state: FormSubmissionState) => void;
+  onRemoveDepartment: (facultyId: number, departmentId: number) => void;
 }
 
 export default function DepartmentForm(
-  {faculties, selectedItem, formAction, formSubmissionState, onSetAlertResponse, onCloseModal, onSaveDepartment, onSetFormState}: DepartmentFormProps
+  {faculties, selectedItem, formAction, formSubmissionState, onSetAlertResponse, onCloseModal, onSaveDepartment, onSetFormState, onRemoveDepartment}: DepartmentFormProps
 ) {
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
   const [showFacultyError, setShowFacultyError] = useState(false);
@@ -128,8 +129,15 @@ export default function DepartmentForm(
   async function handleDeleteSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (!selectedItem) {
+      return;
+    }
+
+    onSetFormState(FormSubmissionState.SUBMITTING);
+
     try {
       const result = await destroy(`/api/departments/${selectedItem?.id!}`);
+      onRemoveDepartment(selectedItem?.facultyId!, selectedItem?.id!);
       onSetAlertResponse({
         message: result.message, 
         status: StatusCode.SUCCESS
@@ -141,6 +149,9 @@ export default function DepartmentForm(
         status: StatusCode.BAD_REQUEST
       });
     }
+    onSetFormState(FormSubmissionState.DONE);
+
+    setAlertResolverTimer();
   }
 
 
@@ -191,7 +202,10 @@ export default function DepartmentForm(
               <Button el="button" variant="secondary" type="button">Cancel</Button>
             </div>
             <div className="basis-[50%] flex flex-col">
-              <Button el="button" variant="danger" type="submit">Yes, delete</Button>
+              <Button el="button" variant="danger" type="submit"
+                disabled={formSubmissionState === FormSubmissionState.SUBMITTING}>
+                { formSubmissionState !== FormSubmissionState.SUBMITTING ? 'Yes, delete' : "Loading..." }
+              </Button>
             </div>
           </div>
         </>
