@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     let message = getExceptionMessage(error);
 
     return Response.json({ message }, {
-      status: StatusCode.SERVER
+      status: StatusCode.BAD_REQUEST
     });
   }
 }
