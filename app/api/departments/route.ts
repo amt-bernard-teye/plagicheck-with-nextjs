@@ -1,8 +1,7 @@
 import { StatusCode } from "@/lib/enum/status-code";
-import { AppException } from "@/lib/exceptions/app.exception";
 import { getExceptionMessage } from "@/lib/exceptions/exception-handler";
 import { DepartmentRepository } from "@/lib/repository/department.repository";
-import { FacultyRepository } from "@/lib/repository/faculty.repository";
+import { checkFaculty } from "@/lib/util/check-entities.util";
 import { departmentValidationSchema } from "@/lib/validation/academic-divisition.validation";
 
 export async function POST(req: Request) {
@@ -11,13 +10,7 @@ export async function POST(req: Request) {
   try {
     const validatedData = await departmentValidationSchema.validate(data);
     const departmentRepo = new DepartmentRepository();
-    const facultyRepo = new FacultyRepository();
-
-    const existingFaculty = await facultyRepo.find(+validatedData.facultyId);
-
-    if (!existingFaculty) {
-      throw new AppException("Faculty doesn't exist");
-    }
+    const existingFaculty = await checkFaculty(+validatedData.facultyId);
 
     const department = await departmentRepo.create({
       name: validatedData.name,
