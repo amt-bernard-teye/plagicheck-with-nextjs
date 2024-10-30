@@ -15,7 +15,7 @@ export default function DepartmentList({list, onEdit, onDelete, onSelectItem}: D
   const [ showMainList, setShowMainList ] = useState(false);
 
   let totalItems = list ? list.length : 0;
-  let actionText = totalItems > 2 ? `+${totalItems}` : totalItems.toString();
+  let actionText = totalItems > 2 ? `+${totalItems - 2}` : totalItems.toString();
   let listItems: React.JSX.Element[] = [];
 
   if (list) {
