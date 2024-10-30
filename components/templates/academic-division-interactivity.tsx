@@ -118,12 +118,44 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
   }
 
 
+  function handleDepartmentFaculty(department: Department) {
+    const existingFacultyIndex = faculties.findIndex(faculty => faculty.id === department.facultyId);
+
+    if (existingFacultyIndex === -1) {
+      return;
+    }
+
+    const updatedFaculties = [...faculties];
+    const faculty = {...updatedFaculties[existingFacultyIndex]};
+
+    if (selectedDepartment) { // implement update
+      const existingDepartmentIndex = faculty.departments!.findIndex(dept => dept.id === department.id);
+      const deleteCount = 1;
+      const departments = [...faculty.departments!];
+      departments.splice(existingDepartmentIndex, deleteCount, department)
+      const updatedFaculty = {
+        ...faculty,
+        departments: [...departments]
+      }
+      updatedFaculties[existingFacultyIndex] = updatedFaculty;
+      setSelectedDepartment(undefined);
+    }
+    else {  // implement add
+      const updatedFaculty = {
+        ...faculty,
+        departments: [...faculty.departments!, department]
+      }
+      updatedFaculties[existingFacultyIndex] = updatedFaculty;
+    }
+
+    setFaculties(updatedFaculties);
+  }
+
+
   function handleHideModal() {
     setUserAction(undefined);
-
-    if (selectedFaculty) {
-      setSelectedFaculty(undefined);
-    }
+    setSelectedFaculty(undefined);
+    setSelectedDepartment(undefined);
   }
 
 
@@ -158,7 +190,10 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
         onCloseModal={() => setUserAction(undefined)}
         selectedItem={selectedDepartment}
         onSetAlertResponse={setAlertResponse}
-        formAction={userAction.formAction} />
+        formAction={userAction.formAction}
+        formSubmissionState={formSubmissionState}
+        onSetFormState={setFormSubmissionState}
+        onSaveDepartment={handleDepartmentFaculty} />
     );
   }
 
@@ -214,7 +249,7 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
         </div>
 
       {userAction && (
-        <Modal title={modalHeading} onToggle={() => setUserAction(undefined)}>
+        <Modal title={modalHeading} onToggle={handleHideModal}>
           {form}
         </Modal>
       )}

@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -13,19 +13,26 @@ import MultiSelect from "@/components/molecules/multi-select";
 import { StatusCode } from "@/lib/enum/status-code";
 import { destroy, post, put } from "@/lib/util/http-request";
 import { FormAction } from "@/lib/enum/form-action";
+import { FormSubmissionState } from "@/lib/enum/form-submission-state.enum";
 
 
 type DepartmentFormProps = {
   faculties: Faculty[];
   selectedItem: Department | undefined;
   formAction: FormAction;
+  formSubmissionState: FormSubmissionState;
   onSetAlertResponse: (value: {message: string, status: StatusCode}) => void;
   onCloseModal: () => void;
+  onSaveDepartment: (value: Department) => void;
+  onSetFormState: (state: FormSubmissionState) => void;
 }
 
-export default function DepartmentForm({faculties, selectedItem, formAction, onSetAlertResponse, onCloseModal}: DepartmentFormProps) {
+export default function DepartmentForm(
+  {faculties, selectedItem, formAction, formSubmissionState, onSetAlertResponse, onCloseModal, onSaveDepartment, onSetFormState}: DepartmentFormProps
+) {
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
   const [showFacultyError, setShowFacultyError] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout>();
   const formik = useFormik({
     initialValues: {
       name: ""
@@ -61,13 +68,13 @@ export default function DepartmentForm({faculties, selectedItem, formAction, onS
     
     setShowFacultyError(false);
     let result: {message: string; data: Department};
+    onSetFormState(FormSubmissionState.SUBMITTING);
 
     try {
       if (selectedItem) {
         result = await put(`/api/departments/${selectedItem.id}`, {
           name: values.name,
           facultyId: selectedFaculty.id!,
-          id: selectedItem.id!
         });
         onCloseModal();
       }
@@ -77,19 +84,35 @@ export default function DepartmentForm({faculties, selectedItem, formAction, onS
           facultyId: selectedFaculty.id!
         });
       }
-      onSetAlertResponse({
-        message: result?.message, 
-        status: StatusCode.SUCCESS
-      });
-      formik.resetForm();
+      onSaveDepartment(result.data);
       setSelectedFaculty(undefined);
+      handleFormResponse(result.message, StatusCode.SUCCESS);
+      formik.resetForm();
     }
     catch(error: any) {
-      onSetAlertResponse({
-        message: error.message, 
-        status: StatusCode.BAD_REQUEST
-      });
+      handleFormResponse(error.message, StatusCode.BAD_REQUEST);
     }
+
+    onSetFormState(FormSubmissionState.DONE);
+    setAlertResolverTimer();
+  }
+
+
+  function handleFormResponse(message: string, status: StatusCode) {
+    onSetAlertResponse({
+      message: message, 
+      status: status
+    });
+  }
+
+  function setAlertResolverTimer() {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      onSetFormState(FormSubmissionState.PENDING);
+    }, 2000);
   }
 
 
@@ -122,6 +145,7 @@ export default function DepartmentForm({faculties, selectedItem, formAction, onS
 
 
   let isEditOrAdd = formAction === FormAction.ADD || formAction === FormAction.EDIT;
+  let buttonText = formAction === FormAction.ADD ? "Add" : "Save";
 
   return (
     <form onSubmit={isEditOrAdd ? formik.handleSubmit : handleDeleteSubmit}>
@@ -152,7 +176,10 @@ export default function DepartmentForm({faculties, selectedItem, formAction, onS
               <Button el="button" variant="secondary" type="button">Cancel</Button>
             </div>
             <div className="basis-[50%] flex flex-col">
-              <Button el="button" variant="primary" type="submit">Add</Button>
+              <Button el="button" variant="primary" type="submit"
+                disabled={formSubmissionState === FormSubmissionState.SUBMITTING}>
+                { formSubmissionState !== FormSubmissionState.SUBMITTING ? buttonText : "Loading..." }
+              </Button>
             </div>
           </div>
         </>
