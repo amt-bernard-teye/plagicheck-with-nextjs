@@ -18,6 +18,7 @@ import Paginator from "../molecules/paginator";
 import DepartmentForm from "../organisms/form/department-form";
 import { Department } from "@/lib/types/department.type";
 import { FormSubmissionState } from "@/lib/enum/form-submission-state.enum";
+import ContentWrapper from "../atoms/content-wrapper";
 
 enum UserTab {
   DEPARTMENT = "deparment",
@@ -216,50 +217,50 @@ export default function AcademicDivisionInteractivity({paginatedFaculties, rowCo
         title="Academic Unit"
         description="Add faculties and departments here">
         <div className="flex gap-4">
-            <div className="flex flex-col w-[162px]">
-              <Button el="button" variant="secondary"
-                onClick={() => setUserAction({activeTab: UserTab.DEPARTMENT, formAction: FormAction.ADD})}>Add Department</Button>
-            </div>
-            <div className="flex flex-col w-[128px]">
-              <Button el="button" variant="primary"
-                onClick={() => setUserAction({activeTab: UserTab.FACULTY, formAction: FormAction.ADD})}>Add Faculty</Button>
-            </div>
+          <div className="flex flex-col w-[162px]">
+            <Button el="button" variant="secondary"
+              onClick={() => setUserAction({activeTab: UserTab.DEPARTMENT, formAction: FormAction.ADD})}>Add Department</Button>
           </div>
+          <div className="flex flex-col w-[128px]">
+            <Button el="button" variant="primary"
+              onClick={() => setUserAction({activeTab: UserTab.FACULTY, formAction: FormAction.ADD})}>Add Faculty</Button>
+          </div>
+        </div>
       </SubHeader>
 
-      <div className="py-[15px] px-[21px] xl:py-[19px] xl:px-[41px]">
-          <DataTable columnHeadings={columnHeadings}>
-            {faculties.map(faculty => (
-              <tr key={faculty.id}>
-                <td>{faculty.name}</td>
-                <td>
-                  <DepartmentList
-                    list={faculty.departments}
-                    onEdit={() => handleUserAction(UserTab.DEPARTMENT, FormAction.EDIT)}
-                    onSelectItem={handleSelectedDepartment}
-                    onDelete={() => handleUserAction(UserTab.DEPARTMENT, FormAction.DELETE)}
-                    />
-                </td>
-                <td>
-                  <DataTableActions>
-                    <button className="text-left hover:text-[#0267ff] hover:font-semibold"
-                      onClick={() => {
-                        handleUserAction(UserTab.FACULTY, FormAction.EDIT)
-                        handleSelectedFaculty(faculty.id!);
-                      }}>Edit Faculty</button>
-                    <button className="text-left hover:text-[#0267ff] hover:font-semibold"
-                      onClick={() => {
-                        handleUserAction(UserTab.FACULTY, FormAction.DELETE)
-                        handleSelectedFaculty(faculty.id!);
-                      }}>Delete Faculty</button>
-                  </DataTableActions>
-                </td>
-              </tr>
-            ))}
-          </DataTable>
+      <ContentWrapper>
+        <DataTable columnHeadings={columnHeadings}>
+          {faculties.map(faculty => (
+            <tr key={faculty.id}>
+              <td>{faculty.name}</td>
+              <td>
+                <DepartmentList
+                  list={faculty.departments}
+                  onEdit={() => handleUserAction(UserTab.DEPARTMENT, FormAction.EDIT)}
+                  onSelectItem={handleSelectedDepartment}
+                  onDelete={() => handleUserAction(UserTab.DEPARTMENT, FormAction.DELETE)}
+                  />
+              </td>
+              <td>
+                <DataTableActions>
+                  <button className="text-left hover:text-[#0267ff] hover:font-semibold"
+                    onClick={() => {
+                      handleUserAction(UserTab.FACULTY, FormAction.EDIT)
+                      handleSelectedFaculty(faculty.id!);
+                    }}>Edit Faculty</button>
+                  <button className="text-left hover:text-[#0267ff] hover:font-semibold"
+                    onClick={() => {
+                      handleUserAction(UserTab.FACULTY, FormAction.DELETE)
+                      handleSelectedFaculty(faculty.id!);
+                    }}>Delete Faculty</button>
+                </DataTableActions>
+              </td>
+            </tr>
+          ))}
+        </DataTable>
 
-          <Paginator totalRows={facultyRows}/>
-        </div>
+        <Paginator totalRows={facultyRows}/>
+      </ContentWrapper>
 
       {userAction && (
         <Modal title={modalHeading} onToggle={handleHideModal}>
