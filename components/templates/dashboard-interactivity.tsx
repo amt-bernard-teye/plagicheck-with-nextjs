@@ -24,7 +24,7 @@ export default function DashboardInteractivity({ children }: DashboardInteractiv
         state={showDrawer}
         onHide={() => setShowDrawer(false)} />
 
-      <section className="flex-grow">
+      <section className="flex-grow overflow-y-auto">
         <header className="flex justify-between py-3 px-4 lg:hidden">
           <AppBrand />
           <button 
