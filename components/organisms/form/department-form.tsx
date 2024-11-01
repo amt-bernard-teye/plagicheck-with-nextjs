@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -14,6 +14,8 @@ import { StatusCode } from "@/lib/enum/status-code";
 import { destroy, post, put } from "@/lib/util/http-request";
 import { FormAction } from "@/lib/enum/form-action";
 import { FormSubmissionState } from "@/lib/enum/form-submission-state.enum";
+import { useFormStateTimer } from "@/lib/hooks/use-form-state-timer";
+import { setAlertErrorState, setAlertSuccessState } from "@/lib/util/set-alert-response.util";
 
 
 type DepartmentFormProps = {
@@ -31,12 +33,13 @@ type DepartmentFormProps = {
 export default function DepartmentForm(
   {faculties, selectedItem, formAction, formSubmissionState, onSetAlertResponse, onCloseModal, onSaveDepartment, onSetFormState, onRemoveDepartment}: DepartmentFormProps
 ) {
-  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>();
+  const faculty = faculties.find(fac => fac.id === selectedItem?.facultyId);
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | undefined>(faculty);
   const [showFacultyError, setShowFacultyError] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const { setAlertResolverTimer } = useFormStateTimer(onSetFormState);
   const formik = useFormik({
     initialValues: {
-      name: ""
+      name: selectedItem?.name || ""
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -47,18 +50,6 @@ export default function DepartmentForm(
     }),
     onSubmit: handleSubmit
   });
-
-
-  useEffect(() => {
-    if (selectedItem) {
-      formik.setValues({
-        name: selectedItem.name
-      });
-
-      const faculty = faculties.find(fac => fac.id === selectedItem.facultyId);
-      setSelectedFaculty(faculty);
-    }
-  }, [selectedItem]);
 
 
   async function handleSubmit(values: {name: string}) {
@@ -87,33 +78,15 @@ export default function DepartmentForm(
       }
       onSaveDepartment(result.data);
       setSelectedFaculty(undefined);
-      handleFormResponse(result.message, StatusCode.SUCCESS);
+      setAlertSuccessState(result.message, onSetAlertResponse);
       formik.resetForm();
     }
     catch(error: any) {
-      handleFormResponse(error.message, StatusCode.BAD_REQUEST);
+      setAlertErrorState(error, onSetAlertResponse);
     }
 
     onSetFormState(FormSubmissionState.DONE);
     setAlertResolverTimer();
-  }
-
-
-  function handleFormResponse(message: string, status: StatusCode) {
-    onSetAlertResponse({
-      message: message, 
-      status: status
-    });
-  }
-
-  function setAlertResolverTimer() {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      onSetFormState(FormSubmissionState.PENDING);
-    }, 2000);
   }
 
 
@@ -138,16 +111,10 @@ export default function DepartmentForm(
     try {
       const result = await destroy(`/api/departments/${selectedItem?.id!}`);
       onRemoveDepartment(selectedItem?.facultyId!, selectedItem?.id!);
-      onSetAlertResponse({
-        message: result.message, 
-        status: StatusCode.SUCCESS
-      });
+      setAlertSuccessState(result.message, onSetAlertResponse);
     }
     catch(error: any) {
-      onSetAlertResponse({
-        message: error.message, 
-        status: StatusCode.BAD_REQUEST
-      });
+      setAlertErrorState(error, onSetAlertResponse);
     }
     onSetFormState(FormSubmissionState.DONE);
 
@@ -162,7 +129,7 @@ export default function DepartmentForm(
     <form onSubmit={isEditOrAdd ? formik.handleSubmit : handleDeleteSubmit}>
       {isEditOrAdd ? (
         <>
-          <FormGroup className="mb-2">
+          <FormGroup className="mb-4">
             <Label htmlFor="department_name" className="mb-1 inline-block">Department Name</Label>
             <FormControl 
               type="text" 
@@ -172,7 +139,7 @@ export default function DepartmentForm(
               hasError={!!formik.errors.name && formik.touched.name}/>
             {(formik.errors.name && formik.touched.name) && <FormControlError errorMessage={formik.errors.name} />}
           </FormGroup>
-          <FormGroup className="mb-2">
+          <FormGroup className="mb-4">
             <Label htmlFor="faculty" className="mb-1 inline-block">Select faculty</Label>
             <MultiSelect 
               items={faculties}

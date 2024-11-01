@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef } from "react";
+import { FormEvent } from "react";
 import { useFormik } from "formik";
 
 import FormGroup from "@/components/atoms/form-group";
@@ -14,6 +14,8 @@ import { destroy, post, put } from "@/lib/util/http-request";
 import { FormAction } from "@/lib/enum/form-action";
 import { Faculty } from "@/lib/types/faculty.type";
 import { FormSubmissionState } from "@/lib/enum/form-submission-state.enum";
+import { useFormStateTimer } from "@/lib/hooks/use-form-state-timer";
+import { setAlertErrorState, setAlertSuccessState } from "@/lib/util/set-alert-response.util";
 
 type FacultyFormProps = {
   formAction: FormAction;
@@ -29,37 +31,14 @@ type FacultyFormProps = {
 export default function FacultyForm(
   {formAction, selectedItem, formSubmissionState, onSetAlertResponse, onSetFormState, onSaveFaculty, onHideModal, onUpdateFaculties}: FacultyFormProps
 ) {
-  const timerRef = useRef<NodeJS.Timeout>();
+  const { setAlertResolverTimer } = useFormStateTimer(onSetFormState);
   const formik = useFormik({
     initialValues: {
-      name: ""
+      name: selectedItem?.name || ""
     },
     validationSchema: facultyValidationSchema,
     onSubmit: handleSubmit
   });
-
-
-  useEffect(() => {
-    if (selectedItem) {
-      formik.setValues({name: selectedItem.name});
-    }
-  }, [selectedItem]);
-
-  
-  function handleFormErrorResponse(error: unknown) {
-    let message = error instanceof Error ? error.message : "Something went wrong";
-    onSetAlertResponse({
-      message,
-      status: StatusCode.BAD_REQUEST
-    });
-  }
-
-  function handleFormSuccessResponse(message: string) {
-    onSetAlertResponse({
-      message: message,
-      status: StatusCode.SUCCESS
-    });
-  }
 
 
   async function handleSubmit(values: {name: string}) {
@@ -75,25 +54,15 @@ export default function FacultyForm(
       }
 
       onSaveFaculty(result.data);
-      handleFormSuccessResponse(result.message);
+      setAlertSuccessState(result.message, onSetAlertResponse);
       formik.resetForm();
     }
     catch(error) {
-      handleFormErrorResponse(error);
+      setAlertErrorState(error, onSetAlertResponse);
     }
 
     onSetFormState(FormSubmissionState.DONE);
     setAlertResolverTimer();
-  }
-
-  function setAlertResolverTimer() {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      onSetFormState(FormSubmissionState.PENDING);
-    }, 2000);
   }
 
 
@@ -108,12 +77,12 @@ export default function FacultyForm(
 
     try {
       const result = await destroy(`/api/faculties/${selectedItem?.id}`);
-      handleFormSuccessResponse(result.message);
+      setAlertSuccessState(result.message, onSetAlertResponse);
       onUpdateFaculties(selectedItem?.id!, result.data, result.count);;
       onHideModal();
     }
     catch(error) {
-      handleFormErrorResponse(error);
+      setAlertErrorState(error, onSetAlertResponse);
     }
     
     onSetFormState(FormSubmissionState.DONE);
