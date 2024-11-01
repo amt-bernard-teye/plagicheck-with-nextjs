@@ -6,10 +6,11 @@ export function getExceptionMessage(error: unknown) {
   let message = "Something went wrong";
 
   if (error instanceof ValidationError) {
-    message = "Validation failed";
+    return "Validation failed";
   }
-  else if (error instanceof AppException) {
-    message = error.message;
+  
+  if (error instanceof AppException) {
+    return error.message;
   }
 
   return message;
