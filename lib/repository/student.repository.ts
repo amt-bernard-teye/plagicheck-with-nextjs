@@ -22,7 +22,7 @@ export class StudentRepository extends BaseRepository<Student, StudentProp, numb
     const userRepo = new UserRepository();
     const user = await userRepo.create(entity.user);
 
-    const lecturer = await prisma.student.create({
+    const student = await prisma.student.create({
       data: {
         departmentId: entity.department.id!,
         userId: user.id!,
@@ -44,7 +44,7 @@ export class StudentRepository extends BaseRepository<Student, StudentProp, numb
 
     await db.close();
 
-    return lecturer;
+    return student;
   }
 
 
@@ -54,11 +54,11 @@ export class StudentRepository extends BaseRepository<Student, StudentProp, numb
 
     const userRepo = new UserRepository();
     const updatedUser = await userRepo.update(entity.user);
-    const existingLecturer = await this.findByUserId(updatedUser.id!);
+    const existingStudent = await this.findByUserId(updatedUser.id!);
 
     const updatedLecturer = await prisma.student.update({
       where: {
-        id: existingLecturer?.id
+        id: existingStudent?.id
       },
       data: {
         departmentId: entity.department.id,
