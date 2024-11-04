@@ -1,6 +1,3 @@
-import { StatusCode } from "../enum/status-code";
-
-
 export async function get(path: string) {
   const response = await fetch(path, {
     method: "GET",
