@@ -37,7 +37,7 @@ export async function POST(req: Request) {
           name: student[0],
           email: student[1],
           phoneNumber: student[2],
-          role: Role.LECTURER,
+          role: Role.STUDENT,
           password: generatedPassword
         }
       });
