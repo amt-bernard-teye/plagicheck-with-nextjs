@@ -185,7 +185,7 @@ export default function LecturerForm(
 
             <div className="flex gap-4 mt-4">
               <div className="basis-[50%] flex flex-col">
-                <Button el="button" variant="secondary" type="button">Cancel</Button>
+                <Button el="button" variant="secondary" type="button" onClick={onHideModal}>Cancel</Button>
               </div>
               <div className="basis-[50%] flex flex-col">
                 <Button el="button" variant="primary" type="submit" 
@@ -200,7 +200,7 @@ export default function LecturerForm(
             <p className="mb-4">Are you sure you want to delete {selectedItem?.user.name}? Please remember that this action cannot be undone.</p>
             <div className="flex gap-4 mt-4">
               <div className="basis-[50%] flex flex-col">
-                <Button el="button" variant="secondary" type="button">Cancel</Button>
+                <Button el="button" variant="secondary" type="button" onClick={onHideModal}>Cancel</Button>
               </div>
               <div className="basis-[50%] flex flex-col">
                 <Button el="button" variant="danger" type="submit"
