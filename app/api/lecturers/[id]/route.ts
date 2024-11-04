@@ -21,10 +21,6 @@ export async function PUT(req: Request, {params}: Params) {
     const lecturer = await checkLecturer(params.id, lecturerRepo);
     const department = await checkDepartment(+validatedData.departmentId);
 
-    if (!lecturer) {
-      throw new Error("Lecturer doesn't exist");
-    }
-
     lecturer.user.name = validatedData.name;
     lecturer.user.email = validatedData.email;
     lecturer.user.phoneNumber = validatedData.phoneNumber;
